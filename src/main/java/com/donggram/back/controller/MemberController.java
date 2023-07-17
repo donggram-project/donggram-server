@@ -1,6 +1,7 @@
 package com.donggram.back.controller;
 
 import com.donggram.back.dto.ResponseDto;
+import com.donggram.back.dto.SignInDto;
 import com.donggram.back.dto.SignUpDto;
 import com.donggram.back.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -27,5 +28,13 @@ public class MemberController {
 
         return ResponseEntity.ok(responseDto);
 
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody SignInDto signInDto) throws Exception {
+
+        ResponseDto responseDto = memberService.login(signInDto);
+
+        return ResponseEntity.ok(responseDto);
     }
 }
