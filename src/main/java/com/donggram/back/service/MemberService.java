@@ -12,6 +12,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class MemberService {
@@ -22,7 +25,7 @@ public class MemberService {
     private final JwtTokenProvider jwtTokenProvider;
 
     public ResponseDto join(SignUpDto signUpDto) throws Exception{
-        if(memberRepository.findById(signUpDto.getStudent_id()).isPresent()){
+        if(memberRepository.findByStudentId(signUpDto.getStudentId()).isPresent()){
             throw new Exception("이미 가입된 학번 입니다.");
         }
         if(!signUpDto.getPassword().equals(signUpDto.getCheckPassword())){
@@ -30,7 +33,7 @@ public class MemberService {
         }
 
         Member member = Member.builder()
-                .id(signUpDto.getStudent_id())
+                .studentId(signUpDto.getStudentId())
                 .password(signUpDto.getPassword())
                 .name(signUpDto.getName())
                 .college1(signUpDto.getCollege1())
@@ -38,6 +41,7 @@ public class MemberService {
                 .major1(signUpDto.getMajor1())
                 .major2(signUpDto.getMajor2())
                 .profile_image("NULL")
+                .roles(Collections.singletonList("ROLE_USER"))
                 .build();
         member.encodePassword(passwordEncoder);
         memberRepository.save(member);
@@ -51,13 +55,11 @@ public class MemberService {
     }
 
     public ResponseDto login(SignInDto signInDto) {
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(signInDto.getStudentId(), signInDto.getPassword());
+        Member member = memberRepository.findByStudentId(signInDto.getStudentId())
+                .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 학번입니다."));
 
 
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-
-
-        TokenInfo tokenInfo = jwtTokenProvider.generateToken(authentication);
+        TokenInfo tokenInfo = jwtTokenProvider.generateToken(signInDto.getStudentId(), member.getRoles());
 
         return ResponseDto.builder()
                 .status(200)

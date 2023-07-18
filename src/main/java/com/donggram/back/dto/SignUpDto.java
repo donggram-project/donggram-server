@@ -12,7 +12,7 @@ import javax.validation.constraints.NotBlank;
 public class SignUpDto {
 
     @NotBlank(message = "학번을 입력해주세요.")
-    private Long student_id;
+    private String studentId;
 
     @NotBlank(message = "이름을 입력해주세요.")
     private String name;
@@ -31,5 +31,7 @@ public class SignUpDto {
     private String major1;
 
     private String major2;
+
+    private String role;
 
 }
