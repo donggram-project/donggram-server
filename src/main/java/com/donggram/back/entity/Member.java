@@ -50,8 +50,7 @@ public class Member extends BaseTimeEntity implements UserDetails {
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
     private List<String> roles = new ArrayList<>();
-
-
+    
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.roles.stream()

@@ -3,6 +3,7 @@ package com.donggram.back.config;
 
 import com.donggram.back.jwt.JwtAuthenticationFilter;
 import com.donggram.back.jwt.JwtTokenProvider;
+import com.donggram.back.repository.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.context.annotation.Bean;
@@ -20,6 +21,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final JwtTokenProvider jwtTokenProvider;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -40,7 +42,7 @@ public class SecurityConfig {
                 .antMatchers("/api/join").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, refreshTokenRepository),
                         UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

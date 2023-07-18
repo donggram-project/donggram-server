@@ -1,6 +1,8 @@
 package com.donggram.back.jwt;
 
 import com.donggram.back.dto.TokenInfo;
+import com.donggram.back.entity.RefreshToken;
+import com.donggram.back.repository.RefreshTokenRepository;
 import com.donggram.back.service.CustomUserDetailService;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -20,6 +22,7 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.security.Key;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -32,10 +35,12 @@ public class JwtTokenProvider {
 
     private String secretKey = "myprojectsecretmyprojectsecretmyprojectsecret";
     // 토큰 유효시간 30분
-    private long tokenValidTime = 30 * 60 * 1000L;
-    private long refreshTokenValidTime = 30 * 24 * 60 * 60 * 1000L;
+    private long tokenValidTime =  60 * 1000L;
+//    private long refreshTokenValidTime = 30 * 24 * 60 * 60 * 1000L;
+    private long refreshTokenValidTime = 60 * 1000L;
 
     private final UserDetailsService userDetailsService;
+    private final RefreshTokenRepository refreshTokenRepository;
 
 
 
@@ -68,8 +73,16 @@ public class JwtTokenProvider {
                 .build();
     }
 
+    public void setHeaderAccessToken(HttpServletResponse response, String accessToken) {
+        response.setHeader("Access_Token", accessToken);
+    }
+    public void setHeaderRefreshToken(HttpServletResponse response, String refreshToken) {
+        response.setHeader("Refresh_Token", refreshToken);
+    }
+
+
     public Authentication getAuthentication(String accessToken){
-        UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUserPk(accessToken  ));
+        UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUserPk(accessToken));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
@@ -77,18 +90,32 @@ public class JwtTokenProvider {
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
     }
 
-    public String resolveToken(HttpServletRequest request) {
-        return request.getHeader("Authorization");
+    public String getHeaderToken(HttpServletRequest request, String type) {
+        return type.equals("Access") ? request.getHeader("Access_Token") : request.getHeader("Refresh_Token");
     }
 
     public boolean validateToken(String jwtToken) {
         try {
-            Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken);
-            return !claims.getBody().getExpiration().before(new Date());
+            Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken).getBody();
+            Date expiration = claims.getExpiration();
+            log.info("expiration : " + expiration);
+            return true;
         } catch (Exception e) {
             return false;
         }
     }
+
+    public boolean refreshTokenValidation(String token){
+
+        if(!validateToken(token)) return false;
+
+        Optional<RefreshToken> refreshToken = refreshTokenRepository.findByRefreshToken(token);
+
+        return refreshToken.isPresent() && token.equals(refreshToken.get().getRefreshToken());
+
+    }
+
+
 
 
 
