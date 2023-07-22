@@ -13,5 +13,4 @@ public class TokenInfo {
     private String accessToken;
     private String refreshToken;
 
-
 }
