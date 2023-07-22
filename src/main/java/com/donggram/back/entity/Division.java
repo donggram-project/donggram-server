@@ -1,8 +1,11 @@
 package com.donggram.back.entity;
 
+import lombok.Getter;
+
 import javax.persistence.*;
 
 @Entity
+@Getter
 public class Division {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

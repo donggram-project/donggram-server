@@ -1,9 +1,12 @@
 package com.donggram.back.entity;
 
+import lombok.Getter;
+
 import javax.annotation.processing.Generated;
 import javax.persistence.*;
 
 @Entity
+@Getter
 public class Club {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,12 +26,11 @@ public class Club {
 
     // 다대일, 단방향
     @ManyToOne
+    @JoinColumn(name = "COLLEGE_ID")
+    private College college;
+
+    @ManyToOne
     @JoinColumn(name = "DIVISION_ID")
     private Division division;
-
-
-
-
-
 
 }

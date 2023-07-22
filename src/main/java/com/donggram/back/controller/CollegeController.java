@@ -22,10 +22,4 @@ public class CollegeController {
         return ResponseEntity.ok(allCollege);
     }
 
-    @GetMapping
-    public ResponseEntity getCollege(@RequestParam List<Long> collegeIds){
-
-        return ResponseEntity.ok("good");
-    }
-
 }
