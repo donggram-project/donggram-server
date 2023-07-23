@@ -16,13 +16,10 @@ insert into division(division_name) values ('종교분과')
 insert into division(division_name) values ('체육분과')
 insert into division(division_name) values ('학술분과')
 
-
-
-
-insert into club(club_name, college_id, division_id, club_recruitment) values ('Tools', 2, 7, true)
-insert into club(club_name, college_id, division_id, club_recruitment) values ('PLUM', 2, 7, true)
-insert into club(club_name, college_id, division_id, club_recruitment) values ('AFK', 1, 6, true)
-insert into club(club_name, college_id, division_id, club_recruitment) values ('세마치', 1, 1, true)
+insert into club(club_name, college_id, division_id, club_recruitment, club_created, club_content, club_recruitment_period) values ('Tools', 2, 7, true, '2023-07-23', '홍보글..', '23-07-21,23-07-23')
+insert into club(club_name, college_id, division_id, club_recruitment, club_created, club_content, club_recruitment_period) values ('PLUM', 2, 7, true, '2023-07-23', '홍보글..', '23-07-21,23-07-23')
+insert into club(club_name, college_id, division_id, club_recruitment, club_created, club_content, club_recruitment_period) values ('AFK', 1, 6, true, '2023-07-23', '홍보글..', '23-07-21,23-07-23')
+insert into club(club_name, college_id, division_id, club_recruitment, club_created, club_content, club_recruitment_period) values ('세마치', 1, 1, true, '2023-07-23', '홍보글..', '23-07-21,23-07-23')
 
 
 

@@ -9,6 +9,6 @@ import lombok.RequiredArgsConstructor;
 @Builder
 public class DivisionDto {
 
-    private final Long division_id;
-    private final String division_name;
+    private final Long divisionId;
+    private final String divisionName;
 }

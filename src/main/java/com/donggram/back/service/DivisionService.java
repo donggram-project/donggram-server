@@ -26,8 +26,8 @@ public class DivisionService {
         for (Division i : divisionList){
 
             dtoArrayList.add(DivisionDto.builder()
-                    .division_id(i.getId())
-                    .division_name(i.getName())
+                    .divisionId(i.getId())
+                    .divisionName(i.getName())
                     .build());
         }
 

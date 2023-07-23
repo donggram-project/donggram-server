@@ -9,6 +9,6 @@ import lombok.RequiredArgsConstructor;
 @Builder
 public class CollegeDto {
 
-    private final Long college_id;
-    private final String college_name;
+    private final Long collegeId;
+    private final String collegeName;
 }

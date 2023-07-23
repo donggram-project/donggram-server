@@ -1,6 +1,8 @@
 package com.donggram.back.service;
 
 import com.donggram.back.dto.*;
+import com.donggram.back.entity.Club;
+import com.donggram.back.entity.ClubJoin;
 import com.donggram.back.entity.Member;
 import com.donggram.back.entity.RefreshToken;
 import com.donggram.back.jwt.JwtTokenProvider;
@@ -14,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -43,7 +46,7 @@ public class MemberService {
                 .college2(signUpDto.getCollege2())
                 .major1(signUpDto.getMajor1())
                 .major2(signUpDto.getMajor2())
-                .profile_image("NULL")
+                .profileImage("NULL")
                 .roles(Collections.singletonList("ROLE_USER"))
                 .build();
         member.encodePassword(passwordEncoder);
@@ -81,5 +84,43 @@ public class MemberService {
                 .responseMessage("로그인 성공")
                 .data(tokenInfo)
                 .build();
+    }
+    
+    public ResponseDto getMemberDetails(Long memberId){
+        Optional<Member> memberOptional = memberRepository.findById(memberId);
+
+        if(memberOptional.isPresent()){
+            Member member = memberOptional.get();
+            // 가입한 동아리
+            List<String> clubList = new ArrayList<>();
+            for (ClubJoin clubJoin: member.getClubJoinList()) {
+                String clubName = clubJoin.getClub().getClubName();
+                clubList.add(clubName);
+            }
+
+            MemberDetailsDto memberDetailsDto = MemberDetailsDto.builder()
+                    .memberId(member.getId())
+                    .studentId(member.getStudentId())
+                    .memberName(member.getName())
+                    .college1(member.getCollege1())
+                    .major1(member.getMajor1())
+                    .college2(member.getCollege2())
+                    .major2(member.getMajor2())
+                    .profileImage(member.getProfileImage())
+                    .clubList(clubList)
+                    .build();
+
+            return ResponseDto.builder()
+                    .status(200)
+                    .responseMessage("멤버 세부정보 API")
+                    .data(memberDetailsDto)
+                    .build();
+        } else {
+            return ResponseDto.builder()
+                    .status(400)
+                    .responseMessage("해당 멤버 정보 NULL")
+                    .data("NULL")
+                    .build();
+        }
     }
 }

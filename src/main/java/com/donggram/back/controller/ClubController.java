@@ -4,10 +4,7 @@ import com.donggram.back.dto.ResponseDto;
 import com.donggram.back.service.ClubService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,5 +28,12 @@ public class ClubController {
     public ResponseEntity getSelectedClubs(@RequestParam List<Long> collegeIds){
         ResponseDto selectedClubs = clubService.getSelectedClubs(collegeIds);
         return ResponseEntity.ok(selectedClubs);
+    }
+
+    // 동아리 상세페이지
+    @GetMapping("/{id}")
+    public ResponseEntity getClubDetails(@PathVariable("id") Long clubId){
+        ResponseDto clubDetails = clubService.getClubDetails(clubId);
+        return ResponseEntity.ok(clubDetails);
     }
 }
