@@ -7,8 +7,8 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 @Builder
-public class CollegeDto {
+public class DivisionDto {
 
-    private final Long collegeId;
-    private final String collegeName;
+    private final Long divisionId;
+    private final String divisionName;
 }

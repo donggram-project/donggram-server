@@ -24,8 +24,8 @@ public class CollegeService {
         for (College i : collegeList){
 
             dtoArrayList.add(CollegeDto.builder()
-                    .college_id(i.getId())
-                    .college_name(i.getName())
+                    .collegeId(i.getId())
+                    .collegeName(i.getName())
                     .build());
         }
 

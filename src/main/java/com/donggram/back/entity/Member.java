@@ -21,6 +21,7 @@ public class Member extends BaseTimeEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "MEBER_ID")
     private long id;
 
     @Column(nullable = false)
@@ -45,11 +46,16 @@ public class Member extends BaseTimeEntity implements UserDetails {
     String major2;
 
     @Column
-    String profile_image;
+    String profileImage;
+
+    // 일대다, 양방향
+    @OneToMany(mappedBy = "member")
+    private List<ClubJoin> clubJoinList = new ArrayList<>();
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
     private List<String> roles = new ArrayList<>();
+
     
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -57,6 +63,11 @@ public class Member extends BaseTimeEntity implements UserDetails {
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
     }
+
+//    public void addClubJoin(ClubJoin clubJoin){
+//        clubJoinList.add(clubJoin);
+//
+//    }
 
     @Override
     public String getUsername() {
@@ -87,10 +98,5 @@ public class Member extends BaseTimeEntity implements UserDetails {
     public void encodePassword(PasswordEncoder passwordEncoder){
         this.password = passwordEncoder.encode(password);
     }
-
-
-
-
-
 
 }
