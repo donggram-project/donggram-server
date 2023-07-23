@@ -88,9 +88,4 @@ public class Member extends BaseTimeEntity implements UserDetails {
         this.password = passwordEncoder.encode(password);
     }
 
-
-
-
-
-
 }

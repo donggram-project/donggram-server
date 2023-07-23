@@ -18,14 +18,15 @@ public class ClubController {
 
     private final ClubService clubService;
 
+    // 전체 동아리
     @GetMapping("/all")
     public ResponseEntity getAllClubs(){
         ResponseDto allClubs = clubService.getAllClubs();
-
         return ResponseEntity.ok(allClubs);
 
     }
 
+    // 카테고리에서 선택했을 때
     @GetMapping()
     public ResponseEntity getSelectedClubs(@RequestParam List<Long> collegeIds){
         ResponseDto selectedClubs = clubService.getSelectedClubs(collegeIds);
