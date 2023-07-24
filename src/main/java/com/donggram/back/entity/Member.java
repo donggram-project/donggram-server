@@ -1,5 +1,6 @@
 package com.donggram.back.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -49,6 +50,7 @@ public class Member extends BaseTimeEntity implements UserDetails {
     String profileImage;
 
     // 일대다, 양방향
+    @JsonIgnore
     @OneToMany(mappedBy = "member")
     private List<ClubJoin> clubJoinList = new ArrayList<>();
 

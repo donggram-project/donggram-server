@@ -4,10 +4,19 @@ import com.donggram.back.dto.ClubDetailsDto;
 import com.donggram.back.dto.ClubDto;
 import com.donggram.back.dto.ResponseDto;
 import com.donggram.back.entity.Club;
+import com.donggram.back.entity.ClubJoin;
+import com.donggram.back.entity.Member;
+import com.donggram.back.entity.Role;
+import com.donggram.back.jwt.JwtTokenProvider;
+import com.donggram.back.repository.ClubJoinRepository;
 import com.donggram.back.repository.ClubRepository;
+import com.donggram.back.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +26,8 @@ import java.util.Optional;
 public class ClubService {
 
     private final ClubRepository clubRepository;
+    private final ClubJoinRepository clubJoinRepository;
+    private final MemberRepository memberRepository;
 
     List<ClubDto> clubDtoList = new ArrayList<>();
     //모든 동아리 정보 가져오기
@@ -96,4 +107,41 @@ public class ClubService {
                     .build();
         }
     }
+
+    public ResponseDto postClubJoin(Long clubId, String studentId){
+
+        // ClubJoin Entity를 만들어야 함
+        Optional<Club> clubOptional = clubRepository.findById(clubId);
+        Member member = memberRepository.findByStudentId(studentId).get();
+
+
+        if(clubOptional.isPresent()){
+            Club club = clubOptional.get();
+            ClubJoin clubJoin = ClubJoin.builder()
+                    .role(Role.MEMBER)
+                    .joinDate(LocalDate.now())
+                    .member(member)
+                    .club(club)
+                    .build();
+
+            clubJoinRepository.save(clubJoin);
+
+            return ResponseDto.builder()
+                    .status(200)
+                    .responseMessage("동아리 가입신청 완료")
+                    .data(clubJoin)
+                    .build();
+
+
+        }else {
+            return ResponseDto.builder()
+                    .status(400)
+                    .responseMessage("동아리 정보 없음")
+                    .data("NULL")
+                    .build();
+        }
+
+    }
+
+
 }

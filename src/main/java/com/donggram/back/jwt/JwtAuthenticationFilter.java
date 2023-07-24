@@ -5,8 +5,6 @@ import com.donggram.back.dto.TokenInfo;
 import com.donggram.back.entity.RefreshToken;
 import com.donggram.back.repository.RefreshTokenRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
