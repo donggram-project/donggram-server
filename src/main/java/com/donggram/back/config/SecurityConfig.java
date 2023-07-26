@@ -53,10 +53,12 @@ public class SecurityConfig implements WebMvcConfigurer {
                         UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
+
+    /*
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedOrigins("http://10.50.46.30:3000");
     }
-
+     */
 }
