@@ -3,29 +3,26 @@ package com.donggram.back.jwt;
 import com.donggram.back.dto.TokenInfo;
 import com.donggram.back.entity.RefreshToken;
 import com.donggram.back.repository.RefreshTokenRepository;
-import com.donggram.back.service.CustomUserDetailService;
+
 import io.jsonwebtoken.*;
-import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.security.Keys;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
+
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
+
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.security.Key;
+
 import java.util.*;
-import java.util.stream.Collectors;
+
 
 
 @Slf4j
@@ -35,7 +32,7 @@ public class JwtTokenProvider {
 
     private String secretKey = "myprojectsecretmyprojectsecretmyprojectsecret";
     // 토큰 유효시간 30분
-    private long tokenValidTime =  30 * 60 * 1000L;
+    private long tokenValidTime =  60 * 1000L;
     // refreshToken 유효시간 30일
     private long refreshTokenValidTime = 30 * 24 * 60 * 60 * 1000L;
 

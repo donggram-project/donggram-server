@@ -1,6 +1,7 @@
 package com.donggram.back.controller;
 
 import com.donggram.back.dto.ResponseDto;
+import com.donggram.back.jwt.JwtTokenProvider;
 import com.donggram.back.service.ClubService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import java.util.List;
 public class ClubController {
 
     private final ClubService clubService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     // 전체 동아리
     @GetMapping("/all")
@@ -35,5 +37,13 @@ public class ClubController {
     public ResponseEntity getClubDetails(@PathVariable("id") Long clubId){
         ResponseDto clubDetails = clubService.getClubDetails(clubId);
         return ResponseEntity.ok(clubDetails);
+    }
+
+    @PostMapping("/{id}/join")
+    public ResponseEntity postClubJoin(@PathVariable("id") Long clubId, @RequestHeader("Access_Token") String token){
+        String jwt = token;
+        String studentId = jwtTokenProvider.getUserPk(jwt);
+        ResponseDto responseDto = clubService.postClubJoin(clubId, studentId);
+        return ResponseEntity.ok(responseDto);
     }
 }

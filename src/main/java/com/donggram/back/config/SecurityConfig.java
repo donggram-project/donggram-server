@@ -46,7 +46,8 @@ public class SecurityConfig implements WebMvcConfigurer {
                 .antMatchers("/clubs/**").permitAll()
                 .antMatchers("/colleges/**").permitAll()
                 .antMatchers("/division/**").permitAll()
-                .antMatchers("/members/{id}").hasRole("ADMIN")
+                .antMatchers("/members/{id}").permitAll()
+                .antMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, refreshTokenRepository),
@@ -56,7 +57,7 @@ public class SecurityConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://10.50.46.30:3000");
+                .allowedOrigins("http://10.50.96.178:3000");
     }
 
 }

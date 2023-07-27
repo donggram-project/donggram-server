@@ -1,18 +1,22 @@
 package com.donggram.back.entity;
 
-import lombok.Getter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
 @Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ClubJoin {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "CLUBJOIN_ID")
     private Long id;
 
+    //생성일
     private LocalDate joinDate;
 
     @Enumerated(EnumType.STRING)
