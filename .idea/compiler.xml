@@ -11,6 +11,6 @@
         <module name="com.donggram.back.main" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="17" />
+    <bytecodeTargetLevel target="11" />
   </component>
 </project>
