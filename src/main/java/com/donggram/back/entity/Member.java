@@ -52,7 +52,7 @@ public class Member extends BaseTimeEntity implements UserDetails {
     // 일대다, 양방향
     @JsonIgnore
     @OneToMany(mappedBy = "member")
-    private List<ClubJoin> clubJoinList = new ArrayList<>();
+    private final List<ClubJoin> clubJoinList = new ArrayList<>();
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default

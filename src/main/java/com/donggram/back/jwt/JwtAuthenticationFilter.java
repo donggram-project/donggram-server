@@ -7,11 +7,15 @@ import com.donggram.back.repository.RefreshTokenRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.server.authentication.HttpBasicServerAuthenticationEntryPoint;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.filter.GenericFilterBean;
 
+import javax.security.sasl.AuthenticationException;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,25 +29,24 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
+
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         String accessToken = jwtTokenProvider.getHeaderToken((HttpServletRequest) request, "Access");
         String refreshToken = jwtTokenProvider.getHeaderToken((HttpServletRequest) request, "Refresh");
 
-        if(accessToken != null){
+        if (accessToken != null) {
 
             //access 유효한 경우
-            if (jwtTokenProvider.validateToken(accessToken)){
+            if (jwtTokenProvider.validateToken(accessToken)) {
                 Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
                 log.info("accessToken 유효");
-            }
-
-            else if(refreshToken != null){
+            } else if (refreshToken != null) {
 
                 boolean isRefreshToken = jwtTokenProvider.refreshTokenValidation(refreshToken);
                 // access 만료 && refresh 유효
-                if(isRefreshToken){
+                if (isRefreshToken) {
 
                     Optional<RefreshToken> refreshToken1 = refreshTokenRepository.findByRefreshToken(refreshToken);
 
@@ -60,12 +63,19 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
                 }
 
                 // access , refresh 둘다 만료
-                else{
+                else {
                     jwtExceptionHandler((HttpServletResponse) response, "RefreshToken Expired", HttpStatus.BAD_REQUEST);
                     log.info("accessToken,refreshToken 둘 다 만료");
                     return;
                 }
 
+            } else {
+                HttpServletResponse httpResponse = (HttpServletResponse) response;
+                httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                httpResponse.getWriter().write("AccessToken Expired"); // 에러 메시지도 함께 전송
+
+                log.info("accessToken 만료");
+                return;
             }
         }
         chain.doFilter(request, response);
@@ -81,4 +91,5 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             log.error(e.getMessage());
         }
     }
+
 }

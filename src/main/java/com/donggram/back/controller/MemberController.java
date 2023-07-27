@@ -35,8 +35,9 @@ public class MemberController {
     }
 
     @GetMapping("/members/{id}")
-    public ResponseEntity<?> getAllMember(@PathVariable("id") Long memberId){
+    public ResponseEntity<?> getSelectedMember(@PathVariable("id") Long memberId){
         ResponseDto memberDetails = memberService.getMemberDetails(memberId);
         return ResponseEntity.ok(memberDetails);
     }
+
 }
