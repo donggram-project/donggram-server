@@ -8,13 +8,6 @@ spring:
         username: sa
         password:
 
-#    datasource:
-#        driver-class-name: com.mysql.cj.jdbc.Driver
-#        url: jdbc:mysql://localhost:3306/donggram
-#        username: admin
-#        password: menten7272!
-
-
     jpa:
         database-platform: org.hibernate.dialect.H2Dialect
         open-in-view: false
