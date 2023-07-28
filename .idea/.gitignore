@@ -9,3 +9,6 @@
 
 *.yml
 application-prod.yml
+
+### yml
+src/main/resources/application-prod.yml
