@@ -7,5 +7,5 @@
 /dataSources/
 /dataSources.local.xml
 
-# properties
-resources/application-prod.yml
+*.yml
+application-prod.yml
