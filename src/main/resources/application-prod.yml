@@ -6,8 +6,8 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://43.200.164.21:3306/donggramDB?useSSL=false
-    username: root
-    password: menten7272!
+    username: admin
+    password: donggram
 
   jpa:
     database-platform: org.hibernate.dialect.MySQL57Dialect
