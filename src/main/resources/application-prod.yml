@@ -5,7 +5,7 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://43.200.164.21:3306/donggramDB?useSSL=false
+    url: jdbc:mysql://donggram-db.c0ux4rjo51ph.ap-northeast-2.rds.amazonaws.com:3306/donggramDB?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     username: admin
     password: donggram
 
