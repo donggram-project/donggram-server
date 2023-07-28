@@ -1,0 +1,17 @@
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://43.200.164.21:3306/donggramDB
+    username: admin
+    password: donggram
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    open-in-view: false
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+    defer-datasource-initialization: true
