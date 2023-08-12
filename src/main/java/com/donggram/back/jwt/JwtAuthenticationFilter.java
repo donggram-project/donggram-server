@@ -35,14 +35,24 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         String accessToken = jwtTokenProvider.getHeaderToken((HttpServletRequest) request, "Access");
         String refreshToken = jwtTokenProvider.getHeaderToken((HttpServletRequest) request, "Refresh");
 
-        if (accessToken != null) {
-
+        if(accessToken != null){
             //access 유효한 경우
             if (jwtTokenProvider.validateToken(accessToken)) {
                 Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
                 log.info("accessToken 유효");
-            } else if (refreshToken != null) {
+            }
+            else {
+                HttpServletResponse httpResponse = (HttpServletResponse) response;
+                httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                httpResponse.setContentType("application/json"); // Content-Type 설정
+
+                String jsonError = "{\"status\": 401, \"responseMessage\": \"AccessToken Expired\"}";
+
+                httpResponse.getWriter().write(jsonError);
+                return;
+            }
+        } else if (accessToken == null && refreshToken != null) {
 
                 boolean isRefreshToken = jwtTokenProvider.refreshTokenValidation(refreshToken);
                 // access 만료 && refresh 유효
@@ -58,38 +68,33 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
                     Authentication authentication = jwtTokenProvider.getAuthentication(newAccessToken);
                     SecurityContextHolder.getContext().setAuthentication(authentication);
-                    log.info("accessToken만료, refreshToken 발급함");
 
+                    HttpServletResponse httpResponse = (HttpServletResponse) response;
+                    httpResponse.setStatus(402);
+                    httpResponse.setContentType("application/json"); // Content-Type 설정
+
+                    String jsonError = "{\"status\": 402, \"responseMessage\": \"New AccessToken Generated\"}";
+
+                    httpResponse.getWriter().write(jsonError);
+                    log.info("accessToken만료, refreshToken 발급함");
+                    return;
+                    // responseDto
                 }
 
                 // access , refresh 둘다 만료
                 else {
-                    jwtExceptionHandler((HttpServletResponse) response, "RefreshToken Expired", HttpStatus.BAD_REQUEST);
-                    log.info("accessToken,refreshToken 둘 다 만료");
+                    HttpServletResponse httpResponse = (HttpServletResponse) response;
+                    httpResponse.setStatus(403);
+                    httpResponse.setContentType("application/json"); // Content-Type 설정
+
+                    String jsonError = "{\"status\": 403, \"responseMessage\": \"RefreshToken Expired\"}";
+
+                    httpResponse.getWriter().write(jsonError);
                     return;
                 }
-
-            } else {
-                HttpServletResponse httpResponse = (HttpServletResponse) response;
-                httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                httpResponse.getWriter().write("AccessToken Expired"); // 에러 메시지도 함께 전송
-
-                log.info("accessToken 만료");
-                return;
             }
-        }
-        chain.doFilter(request, response);
-    }
 
-    public void jwtExceptionHandler(HttpServletResponse response, String msg, HttpStatus status) {
-        response.setStatus(status.value());
-        response.setContentType("application/json");
-        try {
-            String json = new ObjectMapper().writeValueAsString(new GlobalResDto(msg, status.value()));
-            response.getWriter().write(json);
-        } catch (Exception e) {
-            log.error(e.getMessage());
-        }
+        chain.doFilter(request, response);
     }
 
 }

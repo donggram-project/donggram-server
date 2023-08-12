@@ -38,12 +38,13 @@ public class Club {
     private List<ClubJoin> clubJoinList = new ArrayList<>();
 
     // 다대일, 단방향
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "COLLEGE_ID")
     private College college;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "DIVISION_ID")
     private Division division;
+
 
 }

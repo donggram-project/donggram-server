@@ -32,9 +32,11 @@ public class JwtTokenProvider {
 
     private String secretKey = "myprojectsecretmyprojectsecretmyprojectsecret";
     // 토큰 유효시간 30분
-    private long tokenValidTime =  60 * 1000L;
+    private long tokenValidTime =  30 * 60 * 1000L;
+//    private long tokenValidTime =  1000L;
     // refreshToken 유효시간 30일
     private long refreshTokenValidTime = 30 * 24 * 60 * 60 * 1000L;
+//    private long refreshTokenValidTime = 30 * 1000L;
 
     private final UserDetailsService userDetailsService;
     private final RefreshTokenRepository refreshTokenRepository;
@@ -49,6 +51,7 @@ public class JwtTokenProvider {
     public TokenInfo generateToken(String userPk, List<String> roles){
         Claims claims = Jwts.claims().setSubject(userPk);
         claims.put("roles", roles);
+
         Date now = new Date();
 
         String accessToken = Jwts.builder()
@@ -59,9 +62,13 @@ public class JwtTokenProvider {
                 .compact();
 
         String refreshToken = Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + refreshTokenValidTime))
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
+
+
 
         return TokenInfo.builder()
                 .grantType("Bearer")
@@ -96,7 +103,10 @@ public class JwtTokenProvider {
             Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken).getBody();
             Date expiration = claims.getExpiration();
             log.info("expiration : " + expiration);
-            return true;
+            Date now = new Date();
+            System.out.println(now);
+
+            return now.before(expiration);
         } catch (Exception e) {
             return false;
         }
@@ -106,9 +116,16 @@ public class JwtTokenProvider {
 
         if(!validateToken(token)) return false;
 
+        Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
+        Date expiration = claims.getExpiration();
+        log.info("RefreshToken Expiration : " + expiration);
+        Date now = new Date();
+        System.out.println(now);
+
+
         Optional<RefreshToken> refreshToken = refreshTokenRepository.findByRefreshToken(token);
 
-        return refreshToken.isPresent() && token.equals(refreshToken.get().getRefreshToken());
+        return now.before(expiration) && refreshToken.isPresent() && token.equals(refreshToken.get().getRefreshToken());
 
     }
 

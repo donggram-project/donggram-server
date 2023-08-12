@@ -13,6 +13,7 @@ import com.donggram.back.repository.ClubRepository;
 import com.donggram.back.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
@@ -29,8 +30,10 @@ public class ClubService {
     private final ClubJoinRepository clubJoinRepository;
     private final MemberRepository memberRepository;
 
+
     List<ClubDto> clubDtoList = new ArrayList<>();
     //모든 동아리 정보 가져오기
+    @Transactional
     public ResponseDto getAllClubs(){
         for (Club club : clubRepository.findAll()) {
             clubDtoList.add(ClubDto.builder()
@@ -49,6 +52,7 @@ public class ClubService {
                 .build();
     }
 
+    @Transactional
     public ResponseDto getSelectedClubs(List<Long> clubIds){
 
         List<ClubDetailsDto> clubDetailsDtoList = new ArrayList<>();
@@ -77,6 +81,7 @@ public class ClubService {
                 .build();
     }
 
+    @Transactional
     public ResponseDto getClubDetails(Long clubId){
         Optional<Club> clubOptional = clubRepository.findById(clubId);
 
@@ -124,12 +129,13 @@ public class ClubService {
                     .club(club)
                     .build();
 
+
             clubJoinRepository.save(clubJoin);
 
             return ResponseDto.builder()
                     .status(200)
                     .responseMessage("동아리 가입신청 완료")
-                    .data(clubJoin)
+                    .data("null")
                     .build();
 
 

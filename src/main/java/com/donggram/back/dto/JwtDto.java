@@ -7,5 +7,7 @@ import org.springframework.beans.factory.annotation.Required;
 @Getter
 @RequiredArgsConstructor
 public class JwtDto {
+
     private final String jwt;
+
 }
