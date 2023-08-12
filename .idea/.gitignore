@@ -8,7 +8,7 @@
 /dataSources.local.xml
 
 *.yml
-application-prod.yml
+application.yml
 
 ### yml
-src/main/resources/application-prod.yml
+src/main/resources/application.yml

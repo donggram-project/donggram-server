@@ -6,6 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -65,11 +66,6 @@ public class Member extends BaseTimeEntity implements UserDetails {
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
     }
-
-//    public void addClubJoin(ClubJoin clubJoin){
-//        clubJoinList.add(clubJoin);
-//
-//    }
 
     @Override
     public String getUsername() {

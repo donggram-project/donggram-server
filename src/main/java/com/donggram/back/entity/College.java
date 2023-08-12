@@ -21,4 +21,5 @@ public class College {
 
     @Column(name = "COLLEGE_NAME")
     private String name;
+
 }
