@@ -38,4 +38,14 @@ public class AdminService {
                 .data(memberList)
                 .build();
     }
+
+    public ResponseDto deleteSelectedMember(Long memberId) {
+        Member member = memberRepository.findById(memberId).get();
+        memberRepository.delete(member);
+        return ResponseDto.builder()
+                .status(200)
+                .responseMessage("삭제된 멤버 ID")
+                .data(memberId)
+                .build();
+    }
 }

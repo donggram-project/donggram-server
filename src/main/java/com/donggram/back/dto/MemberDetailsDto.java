@@ -1,14 +1,16 @@
 package com.donggram.back.dto;
 
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import com.donggram.back.entity.ClubJoin;
+import com.donggram.back.entity.Member;
+import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
-@Getter
+@Data
 @Builder
+@AllArgsConstructor
 public class MemberDetailsDto {
 
     private Long memberId;
@@ -20,5 +22,23 @@ public class MemberDetailsDto {
     private String major2;
     private String profileImage;
     private List<String> clubList;
+
+    public MemberDetailsDto(Member member) {
+        this.memberId = member.getId();
+        this.studentId = member.getStudentId();
+        this.memberName = member.getName();
+        this.college1 = member.getCollege1();
+        this.major1 = member.getMajor1();
+        this.college2 = member.getCollege2();
+        this.major2 = member.getMajor2();
+        this.profileImage = member.getProfileImage();
+
+        List<String> clubList = new ArrayList<>();
+        for (ClubJoin clubJoin: member.getClubJoinList()) {
+            String clubName = clubJoin.getClub().getClubName();
+            clubList.add(clubName);
+        }
+        this.clubList = clubList;
+    }
 
 }
