@@ -9,5 +9,5 @@ spring:
         database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
         open-in-view: false
         show-sql: true
-        hibernate.hbm2ddl.auto: create
+        hibernate.hbm2ddl.auto: update
         generate-ddl: true

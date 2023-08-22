@@ -19,6 +19,7 @@ public class MemberDetailsDto {
     private String college2;
     private String major2;
     private String profileImage;
+    private String role;
     private List<String> clubList;
 
 }

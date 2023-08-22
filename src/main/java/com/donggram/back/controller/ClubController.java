@@ -22,7 +22,6 @@ public class ClubController {
     public ResponseEntity getAllClubs(){
         ResponseDto allClubs = clubService.getAllClubs();
         return ResponseEntity.ok(allClubs);
-
     }
 
     // 카테고리에서 선택했을 때

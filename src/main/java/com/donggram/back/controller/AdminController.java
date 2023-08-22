@@ -20,10 +20,17 @@ public class AdminController {
         return ResponseEntity.ok(allMembers);
     }
 
-//    @GetMapping("/members/{id}")
-//    public ResponseEntity getSelectedMember(@PathVariable("id") Long memberId){
-//        ResponseDto selectedMember = adminService.getSelectedMember(memberId);
-//    }
+    @GetMapping("/members/{id}")
+    public ResponseEntity getSelectedMember(@PathVariable("id") Long memberId){
+        ResponseDto selectedMember = adminService.getMemberDetails(memberId);
+        return ResponseEntity.ok(selectedMember);
+    }
+
+    @DeleteMapping("/member/{id}")
+    public ResponseEntity deleteSelectedMember(@PathVariable("id") Long memberId){
+        ResponseDto responseDto = adminService.deleteMember(memberId);
+        return ResponseEntity.ok(responseDto);
+    }
 
 
 }
