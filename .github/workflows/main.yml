@@ -16,6 +16,10 @@ on:
 env:
   S3_BUCKET_NAME: donggram-deploy
 
+permissions:
+  id-token: write
+  contents: read
+  
 jobs:
   build:
 
