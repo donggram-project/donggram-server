@@ -9,9 +9,9 @@ name: Java CI with Gradle
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "changha" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "changha" ]
 
 env:
   S3_BUCKET_NAME: cointalk-deploy
