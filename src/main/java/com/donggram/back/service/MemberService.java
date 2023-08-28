@@ -1,7 +1,6 @@
 package com.donggram.back.service;
 
 import com.donggram.back.dto.*;
-import com.donggram.back.entity.Club;
 import com.donggram.back.entity.ClubJoin;
 import com.donggram.back.entity.Member;
 import com.donggram.back.entity.RefreshToken;
@@ -9,12 +8,9 @@ import com.donggram.back.jwt.JwtTokenProvider;
 import com.donggram.back.repository.MemberRepository;
 import com.donggram.back.repository.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -86,6 +82,7 @@ public class MemberService {
                 .build();
     }
     
+    @Transactional
     public ResponseDto getMemberDetails(Long memberId){
         Optional<Member> memberOptional = memberRepository.findById(memberId);
 
@@ -123,4 +120,10 @@ public class MemberService {
                     .build();
         }
     }
+
+
+
+
 }
+
+
