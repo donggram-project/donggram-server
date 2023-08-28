@@ -5,28 +5,22 @@ import com.donggram.back.jwt.JwtAuthenticationFilter;
 import com.donggram.back.jwt.JwtTokenProvider;
 import com.donggram.back.repository.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Required;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import java.util.Arrays;
+
 
 @Configuration
 @RequiredArgsConstructor
@@ -45,6 +39,8 @@ public class SecurityConfig implements WebMvcConfigurer {
         return httpSecurity
                 .httpBasic().disable()
                 .csrf().disable()
+                .cors().configurationSource(corsConfigurationSource())
+                .and()
                 .headers().frameOptions().disable().and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
@@ -57,19 +53,37 @@ public class SecurityConfig implements WebMvcConfigurer {
                 .antMatchers("/division/**").permitAll()
                 .antMatchers("/members/{id}").authenticated()
                 .antMatchers("/admin/**").hasRole("ADMIN")
+                .antMatchers("/refreshToken").permitAll()
                 .anyRequest().authenticated()
                 .and()
+//                .addFilter(new JwtAuthenticationFilter2(authenticationManager))
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, refreshTokenRepository),
                         UsernamePasswordAuthenticationFilter.class)
                 .build();
 
     }
+//
+//    @Override
+//    public void addCorsMappings(CorsRegistry registry) {
+//        registry.addMapping("/**")
+//                .allowedOrigins("http://192.168.0.4:3000", "*")
+//                .allowedHeaders("*", "Access_Token")
+//                .allowedMethods("OPTIONS", "GET", "POST", "PUT", "DELETE")
+//                .allowCredentials(true);
+//    }
 
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedOrigins("http://192.168.0.4:3000", "*")
-                .allowedMethods("OPTIONS", "GET", "POST", "PUT", "DELETE");
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+
+        config.setAllowCredentials(true);
+        config.setAllowedOriginPatterns(Arrays.asList("*"));
+        config.setAllowedMethods(Arrays.asList("HEAD","POST","GET","DELETE","PUT"));
+        config.setAllowedHeaders(Arrays.asList("*"));
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
     }
 
 }
