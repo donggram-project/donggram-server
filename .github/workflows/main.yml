@@ -74,6 +74,6 @@ jobs:
         --application-name donggram \
         --deployment-group-name donggram-group \
         --file-exists-behavior OVERWRITE \
-        --s3-location bucket=donggram-deploy,bundleType=zip,key=donggram.zip\ 
+        --s3-location bucket=donggram-deploy,bundleType=zip,key=donggram.zip \ 
         --region ap-northeast-2
 
