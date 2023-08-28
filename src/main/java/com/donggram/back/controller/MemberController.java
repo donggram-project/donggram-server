@@ -1,5 +1,6 @@
 package com.donggram.back.controller;
 
+import com.donggram.back.dto.ProfileUpdateDto;
 import com.donggram.back.dto.ResponseDto;
 import com.donggram.back.dto.SignInDto;
 import com.donggram.back.dto.SignUpDto;
@@ -37,6 +38,12 @@ public class MemberController {
     @GetMapping("/members/{id}")
     public ResponseEntity<?> getSelectedMember(@PathVariable("id") Long memberId){
         ResponseDto memberDetails = memberService.getMemberDetails(memberId);
+        return ResponseEntity.ok(memberDetails);
+    }
+
+    @PatchMapping("/members/{id}")
+    public ResponseEntity<?> updateProfile(@PathVariable("id") Long memberId, @ModelAttribute ProfileUpdateDto profileUpdateDto) {
+        ResponseDto memberDetails = memberService.updateDetails(memberId, profileUpdateDto);
         return ResponseEntity.ok(memberDetails);
     }
 

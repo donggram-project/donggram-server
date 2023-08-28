@@ -26,11 +26,9 @@ public class AdminController {
         return ResponseEntity.ok(selectedMember);
     }
 
-    @DeleteMapping("/member/{id}")
-    public ResponseEntity deleteSelectedMember(@PathVariable("id") Long memberId){
-        ResponseDto responseDto = adminService.deleteMember(memberId);
-        return ResponseEntity.ok(responseDto);
+    @DeleteMapping("/members/{id}")
+    public ResponseEntity deleteMember(@PathVariable("id") Long memberId) {
+        ResponseDto deletedMember = adminService.deleteSelectedMember(memberId);
+        return ResponseEntity.ok(deletedMember);
     }
-
-
 }

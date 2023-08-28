@@ -31,7 +31,7 @@ public class MemberService {
             throw new Exception("이미 가입된 학번 입니다.");
         }
         if(!signUpDto.getPassword().equals(signUpDto.getCheckPassword())){
-            throw new Exception("비밀번호가 일치 하지 않습니다.");
+            throw new Exception("비밀번호가 일치하지 않습니다.");
         }
 
         Member member = Member.builder()
@@ -121,9 +121,16 @@ public class MemberService {
         }
     }
 
-
-
-
+    @Transactional
+    public ResponseDto updateDetails(Long memberId, ProfileUpdateDto profileUpdateDto) {
+        Member member = memberRepository.findById(memberId).get();
+        member.updateProfile(profileUpdateDto);
+        return ResponseDto.builder()
+                .status(200)
+                .responseMessage("수정된 프로필 정보 API")
+                .data(new MemberDetailsDto(member))
+                .build();
+    }
 }
 
 
