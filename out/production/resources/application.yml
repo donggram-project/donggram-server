@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 spring:
   h2:
     console:
@@ -16,5 +15,3 @@ spring:
     hibernate:
       ddl-auto: update
     defer-datasource-initialization: true
-=======
->>>>>>> de7a440ff062beb1b8891ce7761ae0c14fa684ed
