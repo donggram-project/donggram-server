@@ -49,6 +49,14 @@ jobs:
     - name: Copy Jar
       run: cp ./build/libs/*.jar ./deploy
 
+    # appspec.yml 파일 복사
+    - name: Copy appspec.yml
+      run: cp appspec.yml ./deploy
+
+    # script files 복사
+    - name: Copy script
+      run: cp ./scripts/*.sh ./deploy
+
     - name: Make zip file
       run: zip -r ./donggram.zip ./deploy
       shell: bash
@@ -69,7 +77,7 @@ jobs:
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      run: 
+      run: |
         aws deploy create-deployment \
         --application-name donggram \
         --deployment-group-name donggram-group \
