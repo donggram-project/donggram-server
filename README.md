@@ -1,7 +1,7 @@
 # donggram-server 🌴
 
 ### 사용 기술 
-<img src="https://img.shields.io/badge/JAVA-DD6620?style=for-the-badge&logo=JAVA&logoColor=white"> <img src="https://img.shields.io/badge/SPRINGBOOT-6DB33F?style=for-the-badge&logo=SPRING&logoColor=white"> <img src="https://img.shields.io/badge/Spring Security-6DB33F?style=for-the-badge&logo=SPRINGSECURITY&logoColor=white"> <img src="https://img.shields.io/badge/Aws-232F3E7952B3?style=for-the-badge&logo=AMAZONAWS&logoColor=white"> <img src="https://img.shields.io/badge/Github Actions-2088FF?style=for-the-badge&logo=GITHUBACTIONS&logoColor=white"> 
+<img src="https://img.shields.io/badge/JAVA-DD6620?style=for-the-badge&logo=JAVA&logoColor=white"> <img src="https://img.shields.io/badge/SPRINGBOOT-6DB33F?style=for-the-badge&logo=SPRING&logoColor=white"> <img src="https://img.shields.io/badge/Spring Security-6DB33F?style=for-the-badge&logo=SPRINGSECURITY&logoColor=white"> <img src="https://img.shields.io/badge/Amazon EC2-FF9900?style=for-the-badge&logo=AMAZONEC2&logoColor=white"> <img src="https://img.shields.io/badge/Amazon S3-569A31?style=for-the-badge&logo=AMAZONS3&logoColor=white"> <img src="https://img.shields.io/badge/Amazon RDS-527FFF?style=for-the-badge&logo=AMAZONRDS&logoColor=white"> <img src="https://img.shields.io/badge/Github Actions-2088FF?style=for-the-badge&logo=GITHUBACTIONS&logoColor=white"> 
 
 ### 개발 과정
 
