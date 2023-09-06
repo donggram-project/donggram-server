@@ -29,6 +29,7 @@ public class AdminService {
         for (Member member : memberRepository.findAll()) {
             memberList.add(MemberListDto.builder()
                     .id(member.getId())
+                    .name(member.getName())
                     .major(member.getMajor1())
                     .role(member.getRoles().get(0))
                     .studentId(member.getStudentId())
