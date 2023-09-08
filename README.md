@@ -7,7 +7,7 @@
 
 #### 📌 현재 진행상황
 
-• 기획, 디자인 완료(https://www.figma.com/file/IvisYOBany8XNRTsv4i7jV/Tools-Experts-%EC%B4%88%EC%95%88?type=design&mode=design&t=ozJydDsyUxBnBl49-0)(2023-07-05)
+• 기획, 디자인 완료(2023-07-05) (https://www.figma.com/file/IvisYOBany8XNRTsv4i7jV/Tools-Experts-%EC%B4%88%EC%95%88?type=design&mode=design&t=ozJydDsyUxBnBl49-0)
 
 • 카테고리 별로 조회, 멤버 조회, 회원가입, 로그인 API 완료 (2023-08-06)
 
