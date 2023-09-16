@@ -49,7 +49,7 @@ public class SecurityConfig implements WebMvcConfigurer {
                 .antMatchers("/login").permitAll()
                 .antMatchers("/join").permitAll()
                 .antMatchers("/clubs/**").permitAll()
-                .antMatchers("/colleges/**").authenticated()
+                .antMatchers("/colleges/**").permitAll()
                 .antMatchers("/division/**").permitAll()
                 .antMatchers("/members/{id}").authenticated()
                 .antMatchers("/admin/**").hasRole("ADMIN")

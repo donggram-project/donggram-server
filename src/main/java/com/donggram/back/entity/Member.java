@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -98,6 +99,8 @@ public class Member extends BaseTimeEntity implements UserDetails {
         this.password = passwordEncoder.encode(password);
     }
 
+
+
     public void updateProfile(ProfileUpdateDto profileUpdateDto) {
         this.name = profileUpdateDto.getMemberName();
         this.studentId = profileUpdateDto.getStudentId();
@@ -106,5 +109,11 @@ public class Member extends BaseTimeEntity implements UserDetails {
         this.college2 = profileUpdateDto.getCollege2();
         this.major2 = profileUpdateDto.getMajor2();
         // this.profileImage = profileUpdateDto.getProfileImage();
+
+        // 역할 정보를 업데이트
+        if (profileUpdateDto.getRole() != null) {
+            this.roles.clear(); // 기존 역할 정보 모두 삭제
+            this.roles.addAll(Collections.singleton(profileUpdateDto.getRole())); // 새로운 역할 정보 추가
+        }
     }
 }

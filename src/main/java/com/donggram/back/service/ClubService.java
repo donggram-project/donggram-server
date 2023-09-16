@@ -12,6 +12,8 @@ import com.donggram.back.repository.ClubJoinRepository;
 import com.donggram.back.repository.ClubRepository;
 import com.donggram.back.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,31 +55,16 @@ public class ClubService {
     }
 
     @Transactional
-    public ResponseDto getSelectedClubs(List<Long> clubIds){
-
-        List<ClubDetailsDto> clubDetailsDtoList = new ArrayList<>();
-        for(Long id : clubIds){
-            List<Club> clubsByCollegeId = clubRepository.findClubsByCollegeId(id);
-            // 중복 여부 체크
-            for(Club club : clubsByCollegeId){
-                ClubDetailsDto clubDetailsDto = ClubDetailsDto.builder()
-                        .clubId(club.getId())
-                        .clubName(club.getClubName())
-                        .college(club.getCollege().getName())
-                        .division(club.getDivision().getName())
-                        .isRecruitment(club.isRecruitment())
-                        .build();
-                if (clubDetailsDtoList.contains(clubDetailsDto)){
-                    break;
-                }else {
-                    clubDetailsDtoList.add(clubDetailsDto);
-                }
-            }
+    public ResponseDto findClubsByFilters(String keyword, List<Long> collegeIds, List<Long> divisionIds, Pageable pageable){
+        List<Club> clubsByFilters = clubRepository.findClubsByFilters(keyword, collegeIds, divisionIds, pageable).getContent();
+        if (!clubsByFilters.isEmpty()){
+            System.out.println(clubsByFilters.get(0));
         }
+
         return ResponseDto.builder()
                 .status(200)
-                .responseMessage("선택된 동아리 정보 API")
-                .data(clubDetailsDtoList)
+                .responseMessage("모든 동아리 정보 API")
+                .data(clubsByFilters)
                 .build();
     }
 

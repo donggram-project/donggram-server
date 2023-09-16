@@ -1,9 +1,6 @@
 package com.donggram.back.service;
 
-import com.donggram.back.dto.ClubDto;
-import com.donggram.back.dto.MemberDetailsDto;
-import com.donggram.back.dto.MemberListDto;
-import com.donggram.back.dto.ResponseDto;
+import com.donggram.back.dto.*;
 import com.donggram.back.entity.ClubJoin;
 import com.donggram.back.entity.Member;
 import com.donggram.back.repository.MemberRepository;
@@ -84,6 +81,19 @@ public class AdminService {
         }
     }
 
+    @Transactional
+    public ResponseDto modifySelectedMember(Long memberId, ProfileUpdateDto requestDto){
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new RuntimeException("해당 멤버가 존재하지 않습니다."));
+        member.updateProfile(requestDto);
+
+        return ResponseDto.builder()
+                .status(200)
+                .responseMessage("상세 페이지 업데이트 완료")
+                .data("NULL")
+                .build();
+    }
+
+    @Transactional
     public ResponseDto deleteSelectedMember(Long memberId){
             Member member = memberRepository.findById(memberId).get();
             memberRepository.delete(member);

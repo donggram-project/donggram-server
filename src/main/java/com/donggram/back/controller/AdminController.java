@@ -1,5 +1,6 @@
 package com.donggram.back.controller;
 
+import com.donggram.back.dto.ProfileUpdateDto;
 import com.donggram.back.dto.ResponseDto;
 import com.donggram.back.service.AdminService;
 import com.donggram.back.service.MemberService;
@@ -23,6 +24,12 @@ public class AdminController {
     @GetMapping("/members/{id}")
     public ResponseEntity getSelectedMember(@PathVariable("id") Long memberId){
         ResponseDto selectedMember = adminService.getMemberDetails(memberId);
+        return ResponseEntity.ok(selectedMember);
+    }
+
+    @PutMapping("/members/{id}")
+    public ResponseEntity modifySelectedMember(@PathVariable("id") Long memberId, @RequestBody ProfileUpdateDto profileUpdateDto){
+        ResponseDto selectedMember = adminService.modifySelectedMember(memberId, profileUpdateDto);
         return ResponseEntity.ok(selectedMember);
     }
 
