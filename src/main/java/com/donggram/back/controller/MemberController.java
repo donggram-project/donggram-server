@@ -35,15 +35,16 @@ public class MemberController {
         return ResponseEntity.ok(responseDto);
     }
 
-    @GetMapping("/members/{id}")
-    public ResponseEntity<?> getSelectedMember(@PathVariable("id") Long memberId){
-        ResponseDto memberDetails = memberService.getMemberDetails(memberId);
+    @GetMapping("/member")
+    public ResponseEntity<?> getSelectedMember(@RequestHeader("Access_Token") String token){
+
+        ResponseDto memberDetails = memberService.getMemberDetails(token);
         return ResponseEntity.ok(memberDetails);
     }
 
-    @PatchMapping("/members/{id}")
-    public ResponseEntity<?> updateProfile(@PathVariable("id") Long memberId, @ModelAttribute ProfileUpdateDto profileUpdateDto) {
-        ResponseDto memberDetails = memberService.updateDetails(memberId, profileUpdateDto);
+    @PutMapping("/member")
+    public ResponseEntity<?> updateProfile(@RequestHeader("Access_Token") String token, @RequestBody ProfileUpdateDto profileUpdateDto) {
+        ResponseDto memberDetails = memberService.updateDetails(token, profileUpdateDto);
         return ResponseEntity.ok(memberDetails);
     }
 

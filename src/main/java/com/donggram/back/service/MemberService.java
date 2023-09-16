@@ -83,8 +83,10 @@ public class MemberService {
     }
     
     @Transactional
-    public ResponseDto getMemberDetails(Long memberId){
-        Optional<Member> memberOptional = memberRepository.findById(memberId);
+    public ResponseDto getMemberDetails(String token){
+
+        // 해당 멤버 가져오기 By Token
+        Optional<Member> memberOptional = memberRepository.findByStudentId(jwtTokenProvider.getUserPk(token));
 
         if(memberOptional.isPresent()){
             Member member = memberOptional.get();
@@ -122,8 +124,8 @@ public class MemberService {
     }
 
     @Transactional
-    public ResponseDto updateDetails(Long memberId, ProfileUpdateDto profileUpdateDto) {
-        Member member = memberRepository.findById(memberId).get();
+    public ResponseDto updateDetails(String token, ProfileUpdateDto profileUpdateDto) {
+        Member member = memberRepository.findByStudentId(jwtTokenProvider.getUserPk(token)).get();
         member.updateProfile(profileUpdateDto);
         return ResponseDto.builder()
                 .status(200)
