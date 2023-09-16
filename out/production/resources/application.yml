@@ -16,5 +16,3 @@ spring:
     hibernate:
       ddl-auto: update
     defer-datasource-initialization: true
-server:
-  port: 8085
