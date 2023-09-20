@@ -12,9 +12,7 @@ import java.util.List;
 public class ProfileUpdateDto {
     private String studentId;
     private String memberName;
-    private String college1;
     private String major1;
-    private String college2;
     private String major2;
     private String role;
     private MultipartFile profileImage;

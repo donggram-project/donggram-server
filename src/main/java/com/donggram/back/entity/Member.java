@@ -104,9 +104,7 @@ public class Member extends BaseTimeEntity implements UserDetails {
     public void updateProfile(ProfileUpdateDto profileUpdateDto) {
         this.name = profileUpdateDto.getMemberName();
         this.studentId = profileUpdateDto.getStudentId();
-        this.college1 = profileUpdateDto.getCollege1();
         this.major1 = profileUpdateDto.getMajor1();
-        this.college2 = profileUpdateDto.getCollege2();
         this.major2 = profileUpdateDto.getMajor2();
         // this.profileImage = profileUpdateDto.getProfileImage();
 

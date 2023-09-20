@@ -1,8 +1,6 @@
 package com.donggram.back.dto;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 @Getter
 @RequiredArgsConstructor
@@ -13,5 +11,7 @@ public class ClubDto {
     private final String college;
     private final String division;
     private final String clubName;
+    private final String content;
+    private final String RecuritPeriod;
     private final boolean isRecruitment;
 }

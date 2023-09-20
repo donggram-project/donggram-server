@@ -11,6 +11,7 @@ import javax.validation.constraints.NotBlank;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class SignUpDto {
 
     @NotBlank(message = "학번을 입력해주세요.")

@@ -1,5 +1,7 @@
 package com.donggram.back.controller;
 
+import com.donggram.back.dto.ClubDto;
+import com.donggram.back.dto.NewClubDto;
 import com.donggram.back.dto.ResponseDto;
 import com.donggram.back.entity.Club;
 import com.donggram.back.jwt.JwtTokenProvider;
@@ -54,6 +56,14 @@ public class ClubController {
         String jwt = token;
         String studentId = jwtTokenProvider.getUserPk(jwt);
         ResponseDto responseDto = clubService.postClubJoin(clubId, studentId);
+        return ResponseEntity.ok(responseDto);
+    }
+
+    @PostMapping("/new")
+    public ResponseEntity postNewClub(@RequestBody NewClubDto newClubDto){
+
+        ResponseDto responseDto = clubService.postNewClub(newClubDto);
+
         return ResponseEntity.ok(responseDto);
     }
 }

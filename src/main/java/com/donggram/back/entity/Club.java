@@ -1,7 +1,10 @@
 package com.donggram.back.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.annotation.processing.Generated;
 import javax.persistence.*;
@@ -11,6 +14,9 @@ import java.util.List;
 
 @Entity
 @Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Club {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

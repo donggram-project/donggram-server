@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Required;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Map;
 
 @RestController
@@ -19,12 +20,11 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/join")
-    public ResponseEntity<?> join(@RequestBody SignUpDto signUpDto) throws Exception {
+    public ResponseEntity<?> join(@RequestBody @Valid SignUpDto signUpDto) throws Exception {
 
         ResponseDto responseDto = memberService.join(signUpDto);
 
         return ResponseEntity.ok(responseDto);
-
     }
 
     @PostMapping("/login")

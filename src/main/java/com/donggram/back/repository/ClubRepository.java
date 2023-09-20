@@ -22,4 +22,6 @@ public interface ClubRepository extends JpaRepository<Club, Long> {
             @Param("collegeIds") List<Long> collegeIds,
             @Param("divisionIds") List<Long> divisionIds,
             Pageable pageable);
+
+    Optional<Club> findByClubName(String clubName);
 }
