@@ -28,8 +28,8 @@ public class ClubService {
     private final ClubRepository clubRepository;
     private final ClubJoinRepository clubJoinRepository;
     private final MemberRepository memberRepository;
-    private final CollegeRepository collegeRepository;
-    private final DivisionRepository divisionRepository;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final ClubRequestRepository clubRequestRepository;
 
 
     List<ClubDto> clubDtoList = new ArrayList<>();
@@ -54,10 +54,13 @@ public class ClubService {
     }
 
     @Transactional
-    public ResponseDto findClubsByFilters(String keyword, List<Long> collegeIds, List<Long> divisionIds, Pageable pageable){
-        List<Club> clubsByFilters = clubRepository.findClubsByFilters(keyword, collegeIds, divisionIds, pageable).getContent();
+    public ResponseDto findByKeyword(String keyword){
+        List<Club> clubsByFilters = clubRepository.searchClubs("%" + keyword + "%");
         if (!clubsByFilters.isEmpty()){
             System.out.println(clubsByFilters.get(0));
+            System.out.println("test");
+        }else{
+            System.out.println("test2");
         }
 
         return ResponseDto.builder()
@@ -109,7 +112,7 @@ public class ClubService {
             Club club = clubOptional.get();
             ClubJoin clubJoin = ClubJoin.builder()
                     .role(Role.MEMBER)
-                    .joinDate(LocalDate.now())
+                    .joinDate(LocalDateTimeToString())
                     .member(member)
                     .club(club)
                     .build();
@@ -133,42 +136,37 @@ public class ClubService {
     }
 
     @Transactional
-    public ResponseDto postNewClub(NewClubDto newClubDto){
+    public ResponseDto postNewClub(NewClubDto newClubDto, String token){
 
-        Optional<College> byCollegeName = collegeRepository.findByName(newClubDto.getCollege());
-        Optional<Division> byDivisionName = divisionRepository.findByName(newClubDto.getDivision());
+        String studentId = jwtTokenProvider.getUserPk(token);
+        Member member = memberRepository.findByStudentId(studentId).orElseThrow(() -> new RuntimeException("해당 학번이 존재하지 않습니다."));
 
-        if(byCollegeName.isEmpty()){
-            throw new RuntimeException("해당 단과대 이름이 존재하지 않습니다.");
-        }
-        if(byDivisionName.isEmpty()){
-                throw new RuntimeException("해당 분과 이름이 존재하지 않습니다.");
-        }
-        College college = byCollegeName.get();
-        Division division = byDivisionName.get();
 
         //동아리 중복 확인
         String clubName = newClubDto.getClubName();
         Optional<Club> byClubName = clubRepository.findByClubName(clubName);
+
         if(byClubName.isPresent()){
             throw new RuntimeException("이미 존재하는 동아리 입니다.");
         }else{
-            Club club = Club.builder()
-                    .college(college)
-                    .division(division)
+            ClubRequest clubRequest = ClubRequest.builder()
+                    .college(newClubDto.getCollege())
+                    .division(newClubDto.getDivision())
                     .clubName(newClubDto.getClubName())
                     .content(newClubDto.getContent())
+                    .club_created(LocalDateTimeToString())
                     .isRecruitment(newClubDto.isRecruitment())
-                    .clubCreated(LocalDateTimeToString())
-                    .recruitment_period(newClubDto.getRecuritmentPeriod())
+                    .recruitment_period(newClubDto.getRecruitment_period())
+                    .status(RequestStatus.pending)
+                    .member(member)
                     .build();
 
-            clubRepository.save(club);
+            clubRequestRepository.save(clubRequest);
 
             return ResponseDto.builder()
                     .status(200)
-                    .responseMessage("동아리 생성 완료")
-                    .data(club)
+                    .responseMessage("동아리 생성 요청 완료")
+                    .data(clubRequest)
                     .build();
         }
 
@@ -176,7 +174,8 @@ public class ClubService {
     }
 
 
-    public String LocalDateTimeToString(){
+
+    public static String LocalDateTimeToString(){
         // 형식 지정
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
@@ -187,6 +186,7 @@ public class ClubService {
         String formattedDate = now.format(formatter);
 
         return formattedDate;
+
     }
 
 

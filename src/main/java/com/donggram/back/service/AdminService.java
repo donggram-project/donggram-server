@@ -1,9 +1,8 @@
 package com.donggram.back.service;
 
 import com.donggram.back.dto.*;
-import com.donggram.back.entity.ClubJoin;
-import com.donggram.back.entity.Member;
-import com.donggram.back.repository.MemberRepository;
+import com.donggram.back.entity.*;
+import com.donggram.back.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,6 +18,10 @@ import java.util.Optional;
 public class AdminService {
 
     private final MemberRepository memberRepository;
+    private final ClubRequestRepository clubRequestRepository;
+    private final CollegeRepository collegeRepository;
+    private final DivisionRepository divisionRepository;
+    private final ClubRepository clubRepository;
 
     public ResponseDto getAllMembers() {
 
@@ -82,7 +85,7 @@ public class AdminService {
     }
 
     @Transactional
-    public ResponseDto modifySelectedMember(Long memberId, ProfileUpdateDto requestDto){
+    public ResponseDto modifySelectedMember(Long memberId, ProfileUpdateDto requestDto) {
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new RuntimeException("해당 멤버가 존재하지 않습니다."));
         member.updateProfile(requestDto);
 
@@ -94,14 +97,133 @@ public class AdminService {
     }
 
     @Transactional
-    public ResponseDto deleteSelectedMember(Long memberId){
-            Member member = memberRepository.findById(memberId).get();
-            memberRepository.delete(member);
+    public ResponseDto deleteSelectedMember(Long memberId) {
+        Member member = memberRepository.findById(memberId).get();
+        memberRepository.delete(member);
+        return ResponseDto.builder()
+                .status(200)
+                .responseMessage("삭제된 멤버 ID")
+                .data(memberId)
+                .build();
+    }
+
+    //동아리 생성 요청 API 처리 로직
+
+    //모두 조회
+    @Transactional
+    public ResponseDto getAllClubs() {
+        List<ClubListDto> clubList = new ArrayList<>();
+        for (ClubRequest clubRequest : clubRequestRepository.findAll()) {
+            clubList.add(ClubListDto.builder()
+                    .id(clubRequest.getId())
+                    .club_name(clubRequest.getClubName())
+                    .student_name(clubRequest.getMember().getName())
+                    .apply_date(clubRequest.getClub_created())
+                    .major(clubRequest.getMember().getMajor1())
+                    .status(clubRequest.getStatus().toString())
+                    .build());
+        }
+
+        return ResponseDto.builder()
+                .status(200)
+                .responseMessage("멤버 목록 API")
+                .data(clubList)
+                .build();
+    }
+
+    @Transactional
+    public ResponseDto getClubDetails(Long clubId){
+        Optional<ClubRequest> clubRequestOptional = clubRequestRepository.findById(clubId);
+
+        if (clubRequestOptional.isPresent()) {
+            // 동아리 가져옴
+            ClubRequest clubRequest = clubRequestOptional.get();
+
+            // 동아리 세부정보 양식
+            ClubDetailsDto clubDetailsDto = ClubDetailsDto.builder()
+                    .clubCreated(clubRequest.getClub_created())
+                    .clubId(clubRequest.getId())
+                    .clubName(clubRequest.getClubName())
+                    .content(clubRequest.getContent())
+                    .college(clubRequest.getCollege())
+                    .division(clubRequest.getDivision())
+                    .isRecruitment(clubRequest.isRecruitment())
+                    .writer(clubRequest.getMember().getName())
+                    .recruitmentPeriod(clubRequest.getRecruitment_period())
+                    .build();
+
+
             return ResponseDto.builder()
                     .status(200)
-                    .responseMessage("삭제된 멤버 ID")
-                    .data(memberId)
+                    .responseMessage("동아리 세부정보 API")
+                    .data(clubDetailsDto)
+                    .build();
+        } else {
+            return ResponseDto.builder()
+                    .status(400)
+                    .responseMessage("해당 동아리 정보 NULL")
+                    .data("NULL")
                     .build();
         }
     }
+
+    @Transactional
+    public ResponseDto approve(Long clubId) {
+
+        ClubRequest clubRequest = clubRequestRepository.findById(clubId)
+                .orElseThrow(() -> new RuntimeException("해당 동아리 생성 요청이 존재하지 않습니다."));
+
+        // 동아리 상태 변경
+        clubRequest.updateStatus(RequestStatus.approve);
+
+        College college = collegeRepository.findByName(clubRequest.getCollege()).orElseThrow(() -> new RuntimeException("해당 단과대가 존재하지 않습니다."));
+        Division division = divisionRepository.findByName(clubRequest.getDivision()).orElseThrow(() -> new RuntimeException("해당 분과가 존재하지 않습니다."));
+
+        // 작성자 동아리 자동 가입
+        Member member = clubRequest.getMember();
+
+        Club club = Club.builder()
+                .clubName(clubRequest.getClubName())
+                .college(college)
+                .division(division)
+                .recruitment_period(clubRequest.getRecruitment_period())
+                .content(clubRequest.getContent())
+                .clubJoinList(new ArrayList<>())
+                .isRecruitment(clubRequest.isRecruitment())
+                .clubCreated(clubRequest.getClub_created())
+                .build();
+
+        clubRepository.save(club);
+
+        ClubJoin clubJoin = ClubJoin.builder()
+                .club(club)
+                .joinDate(ClubService.LocalDateTimeToString())
+                .role(Role.HOST)
+                .member(member)
+                .build();
+
+        club.updateClubJoinList(clubJoin);
+
+        return ResponseDto.builder()
+                .responseMessage("동아리 생성 승인 완료")
+                .status(200)
+                .data("NULL").build();
+
+    }
+
+    @Transactional
+    public ResponseDto reject(Long clubId){
+        ClubRequest clubRequest = clubRequestRepository.findById(clubId)
+                .orElseThrow(() -> new RuntimeException("해당 동아리 생성 요청이 존재하지 않습니다."));
+
+        clubRequest.updateStatus(RequestStatus.rejected);
+
+        return ResponseDto.builder()
+                .data("NULL")
+                .status(200)
+                .responseMessage("동아리 생성 요청 거절").build();
+    }
+}
+
+
 

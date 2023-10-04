@@ -20,7 +20,7 @@ public class ClubDetailsDto {
     private final String clubCreated;
     private final String content;
     private final String recruitmentPeriod;
-    private final List<String> clubList;
     private final boolean isRecruitment;
+    private final String writer;
 
 }

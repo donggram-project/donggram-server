@@ -13,6 +13,7 @@ public class NewClubDto {
     private String division;
     private String clubName;
     private String content;
-    private String recuritmentPeriod;
+    private String recruitment_period;
     private boolean isRecruitment;
+
 }

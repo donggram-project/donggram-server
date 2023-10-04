@@ -32,16 +32,12 @@ public class ClubController {
     }
 
     // 카테고리에서 선택했을 때
-    @GetMapping()
+    @GetMapping("/search")
     public ResponseEntity getSelectedClubs(
-            @RequestParam(required = false) String keyword,
-            @RequestParam(required = false) List<Long> collegeIds,
-            @RequestParam(required = false) List<Long> divisionIds,
-            @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
+          @RequestParam() String keyword
     ){
-        ResponseDto clubs = clubService.findClubsByFilters(keyword, collegeIds, divisionIds, pageable);
+        ResponseDto clubs = clubService.findByKeyword(keyword);
         return ResponseEntity.ok(clubs);
-
     }
 
     // 동아리 상세페이지
@@ -60,9 +56,9 @@ public class ClubController {
     }
 
     @PostMapping("/new")
-    public ResponseEntity postNewClub(@RequestBody NewClubDto newClubDto){
+    public ResponseEntity postNewClub(@RequestBody NewClubDto newClubDto, @RequestHeader("Access_Token") String token){
 
-        ResponseDto responseDto = clubService.postNewClub(newClubDto);
+        ResponseDto responseDto = clubService.postNewClub(newClubDto, token);
 
         return ResponseEntity.ok(responseDto);
     }

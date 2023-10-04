@@ -52,6 +52,9 @@ public class Member extends BaseTimeEntity implements UserDetails {
     @Column
     String profileImage;
 
+    @OneToOne
+    private ClubRequest clubRequest;
+
     // 일대다, 양방향
     @JsonIgnore
     @OneToMany(mappedBy = "member")

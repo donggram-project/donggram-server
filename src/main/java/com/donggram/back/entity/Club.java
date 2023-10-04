@@ -52,5 +52,8 @@ public class Club {
     @JoinColumn(name = "DIVISION_ID")
     private Division division;
 
+    public void updateClubJoinList(ClubJoin clubJoin){
+        this.clubJoinList.add(clubJoin);
+    }
 
 }

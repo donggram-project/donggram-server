@@ -17,7 +17,7 @@ public class ClubJoin {
     private Long id;
 
     //생성일
-    private LocalDate joinDate;
+    private String joinDate;
 
     @Enumerated(EnumType.STRING)
     private Role role;

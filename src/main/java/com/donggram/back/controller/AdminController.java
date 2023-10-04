@@ -38,4 +38,28 @@ public class AdminController {
         ResponseDto deletedMember = adminService.deleteSelectedMember(memberId);
         return ResponseEntity.ok(deletedMember);
     }
+
+    @GetMapping("/clubs/all")
+    public ResponseEntity getAllClubs(){
+        ResponseDto allClubs = adminService.getAllClubs();
+        return ResponseEntity.ok(allClubs);
+    }
+
+    @GetMapping("/clubs/{id}")
+    public ResponseEntity getSelectedClub(@PathVariable("id") Long clubId){
+        ResponseDto clubDetails = adminService.getClubDetails(clubId);
+        return ResponseEntity.ok(clubDetails);
+    }
+
+    @PutMapping("/clubs/{id}/approve")
+    public ResponseEntity approveClubCreation(@PathVariable Long id){
+        ResponseDto approve = adminService.approve(id);
+        return ResponseEntity.ok(approve);
+    }
+
+    @PutMapping("/clubs/{id}/reject")
+    public ResponseEntity rejectClubCreation(@PathVariable Long id){
+        ResponseDto reject = adminService.reject(id);
+        return ResponseEntity.ok(reject);
+    }
 }
