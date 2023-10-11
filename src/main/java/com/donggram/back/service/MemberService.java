@@ -77,7 +77,7 @@ public class MemberService {
 
         return ResponseDto.builder()
                 .status(200)
-                .responseMessage("로그인 성공")
+                .responseMessage("로그인 성공!")
                 .data(tokenInfo)
                 .build();
     }
