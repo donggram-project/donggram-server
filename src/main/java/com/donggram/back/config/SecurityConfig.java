@@ -63,15 +63,6 @@ public class SecurityConfig implements WebMvcConfigurer {
                 .build();
 
     }
-//
-//    @Override
-//    public void addCorsMappings(CorsRegistry registry) {
-//        registry.addMapping("/**")
-//                .allowedOrigins("http://192.168.0.4:3000", "*")
-//                .allowedHeaders("*", "Access_Token")
-//                .allowedMethods("OPTIONS", "GET", "POST", "PUT", "DELETE")
-//                .allowCredentials(true);
-//    }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
