@@ -17,4 +17,4 @@ spring:
       ddl-auto: update
     defer-datasource-initialization: true
 server:
-  port: 8083
+  port: 8084

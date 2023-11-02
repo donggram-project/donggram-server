@@ -8,5 +8,23 @@
       <jdbc-url>jdbc:mysql://donggram-db.c0ux4rjo51ph.ap-northeast-2.rds.amazonaws.com:3306/donggramDB</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="com.donggram.back.main/Hibernate" uuid="22d71e66-c8c0-45e7-916e-d357ea31349b">
+      <driver-ref>mysql.8</driver-ref>
+      <synchronize>true</synchronize>
+      <imported>true</imported>
+      <remarks>Hibernate</remarks>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://donggram-db.c0ux4rjo51ph.ap-northeast-2.rds.amazonaws.com:3306/donggramDB?serverTimezone=Asia/Seoul&amp;characterEncoding=UTF-8</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
+    <data-source source="LOCAL" name="back.test/Hibernate" uuid="58598bfa-440b-42b7-bb61-8f4794d6dd1a">
+      <driver-ref>mysql.8</driver-ref>
+      <synchronize>true</synchronize>
+      <imported>true</imported>
+      <remarks>Hibernate</remarks>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://donggram-db.c0ux4rjo51ph.ap-northeast-2.rds.amazonaws.com:3306/donggramDB?serverTimezone=Asia/Seoul&amp;characterEncoding=UTF-8</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>
