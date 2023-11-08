@@ -32,10 +32,10 @@ public class ClubService {
     private final ClubRequestRepository clubRequestRepository;
 
 
-    List<ClubDto> clubDtoList = new ArrayList<>();
     //모든 동아리 정보 가져오기
     @Transactional
     public ResponseDto getAllClubs(){
+        List<ClubDto> clubDtoList = new ArrayList<>();
         for (Club club : clubRepository.findAll()) {
             clubDtoList.add(ClubDto.builder()
                             .clubId(club.getId())
