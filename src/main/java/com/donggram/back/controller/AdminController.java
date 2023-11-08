@@ -62,4 +62,5 @@ public class AdminController {
         ResponseDto reject = adminService.reject(id);
         return ResponseEntity.ok(reject);
     }
+
 }
