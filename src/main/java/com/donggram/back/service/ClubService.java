@@ -102,17 +102,56 @@ public class ClubService {
         }
     }
 
-    public ResponseDto postClubJoin(Long clubId, String studentId){
+    @Transactional
+    public ResponseDto approveMember(Long memberId, Long clubId){
+        ClubJoin clubJoin = clubJoinRepository.findByMemberIdAndClubId(memberId, clubId)
+                .orElseThrow(() -> new RuntimeException("해당 멤버의 동아리 가입신청이 존재하지 않습니다."));
 
-        // ClubJoin Entity를 만들어야 함
+        // 가입신청 상태 변경
+        clubJoin.updateStatus(RequestStatus.approve);
+
+        return ResponseDto.builder()
+                .status(200)
+                .responseMessage("동아리 가입신청 승인 완료")
+                .data("NULL").build();
+    }
+
+    @Transactional
+    public ResponseDto memberReject(Long memberId, Long clubId){
+        ClubJoin clubJoin = clubJoinRepository.findByMemberIdAndClubId(memberId, clubId)
+                .orElseThrow(() -> new RuntimeException("해당 멤버의 동아리 가입신청이 존재하지 않습니다."));
+
+        // 가입신청 상태 변경
+        clubJoin.updateStatus(RequestStatus.rejected);
+
+        return ResponseDto.builder()
+                .status(200)
+                .responseMessage("동아리 가입신청 거절 완료")
+                .data("NULL").build();
+    }
+
+    public ResponseDto postClubJoin(Long clubId, String studentId){
         Optional<Club> clubOptional = clubRepository.findById(clubId);
         Member member = memberRepository.findByStudentId(studentId).get();
 
         if(clubOptional.isPresent()){
             Club club = clubOptional.get();
+
+            // Check if the ClubJoin already exists
+            Optional<ClubJoin> clubJoinOptional = clubJoinRepository.findByMemberAndClub(member, club);
+
+            if (clubJoinOptional.isPresent()) {
+                return ResponseDto.builder()
+                        .status(410)
+                        .responseMessage("이미 가입신청이 되어있습니다.")
+                        .data("NULL")
+                        .build();
+            }
+
             ClubJoin clubJoin = ClubJoin.builder()
                     .role(Role.MEMBER)
                     .joinDate(LocalDateTimeToString())
+                    .status(RequestStatus.pending)
                     .member(member)
                     .club(club)
                     .build();
@@ -134,6 +173,7 @@ public class ClubService {
         }
 
     }
+
 
     @Transactional
     public ResponseDto postNewClub(NewClubDto newClubDto, String token){
@@ -169,8 +209,6 @@ public class ClubService {
                     .data(clubRequest)
                     .build();
         }
-
-
     }
 
 

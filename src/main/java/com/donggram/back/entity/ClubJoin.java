@@ -31,5 +31,11 @@ public class ClubJoin {
     @JoinColumn(name = "CLUB_ID")
     private Club club;
 
+    @Enumerated(EnumType.STRING)
+    private RequestStatus status;
+
+    public void updateStatus(RequestStatus status){
+        this.status = status;
+    }
 
 }

@@ -224,11 +224,6 @@ public class AdminService {
                 .responseMessage("동아리 생성 요청 거절").build();
     }
 
-//    public ResponseDto getAllRequestClub(){
-//        List<ClubRequest> all = clubRequestRepository.findAll();
-//
-//
-//    }
 }
 
 

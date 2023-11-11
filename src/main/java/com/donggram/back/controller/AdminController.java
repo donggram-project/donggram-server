@@ -3,6 +3,7 @@ package com.donggram.back.controller;
 import com.donggram.back.dto.ProfileUpdateDto;
 import com.donggram.back.dto.ResponseDto;
 import com.donggram.back.service.AdminService;
+import com.donggram.back.service.ClubService;
 import com.donggram.back.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 public class AdminController {
 
     private final AdminService adminService;
+    private final ClubService clubService;
 
     @GetMapping("/members/all")
     public ResponseEntity getAllMembers(){
@@ -60,6 +62,18 @@ public class AdminController {
     @PutMapping("/clubs/{id}/reject")
     public ResponseEntity rejectClubCreation(@PathVariable Long id){
         ResponseDto reject = adminService.reject(id);
+        return ResponseEntity.ok(reject);
+    }
+
+    @PutMapping("/clubs/members/approve")
+    public ResponseEntity approveClubJoin(@RequestParam Long memberId, @RequestParam Long clubId){
+        ResponseDto approve = clubService.approveMember(memberId, clubId);
+        return ResponseEntity.ok(approve);
+    }
+
+    @PutMapping("/clubs/members/reject")
+    public ResponseEntity rejectClubJoin(@RequestParam Long memberId, @RequestParam Long clubId){
+        ResponseDto reject = clubService.memberReject(memberId, clubId);
         return ResponseEntity.ok(reject);
     }
 
