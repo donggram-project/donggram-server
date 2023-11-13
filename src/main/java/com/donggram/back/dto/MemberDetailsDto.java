@@ -3,9 +3,10 @@ package com.donggram.back.dto;
 
 import com.donggram.back.entity.ClubJoin;
 import com.donggram.back.entity.Member;
+import com.donggram.back.entity.RequestStatus;
 import lombok.*;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Data
@@ -22,7 +23,7 @@ public class MemberDetailsDto {
     private String major2;
     private String profileImage;
     private String role;
-    private List<String> clubList;
+    private HashMap<String, String> clubList;
 
     public MemberDetailsDto(Member member) {
         this.memberId = member.getId();
@@ -32,12 +33,14 @@ public class MemberDetailsDto {
         this.major1 = member.getMajor1();
         this.college2 = member.getCollege2();
         this.major2 = member.getMajor2();
+        this.role = member.getRoles().get(0);
         this.profileImage = member.getProfileImage();
 
-        List<String> clubList = new ArrayList<>();
+        HashMap<String, String> clubList = new HashMap<>();
         for (ClubJoin clubJoin: member.getClubJoinList()) {
             String clubName = clubJoin.getClub().getClubName();
-            clubList.add(clubName);
+            RequestStatus status = clubJoin.getStatus();
+            clubList.put(clubName, status.name());
         }
         this.clubList = clubList;
     }

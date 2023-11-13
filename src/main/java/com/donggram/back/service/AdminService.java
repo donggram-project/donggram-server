@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,10 +52,11 @@ public class AdminService {
             Member member = memberOptional.get();
 
             // 가입한 동아리
-            List<String> clubList = new ArrayList<>();
+            HashMap<String, String> clubList = new HashMap<>();
             for (ClubJoin clubJoin : member.getClubJoinList()) {
                 String clubName = clubJoin.getClub().getClubName();
-                clubList.add(clubName);
+                RequestStatus status = clubJoin.getStatus();
+                clubList.put(clubName, status.name());
             }
 
             MemberDetailsDto memberDetailsDto = MemberDetailsDto.builder()

@@ -4,6 +4,7 @@ import com.donggram.back.dto.*;
 import com.donggram.back.entity.ClubJoin;
 import com.donggram.back.entity.Member;
 import com.donggram.back.entity.RefreshToken;
+import com.donggram.back.entity.RequestStatus;
 import com.donggram.back.jwt.JwtTokenProvider;
 import com.donggram.back.repository.MemberRepository;
 import com.donggram.back.repository.RefreshTokenRepository;
@@ -11,11 +12,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -83,7 +82,8 @@ public class MemberService {
     }
     
     @Transactional
-    public ResponseDto getMemberDetails(String token){
+    public ResponseDto getMemberDetails(String token, MultipartFile imageFile){
+
 
         // 해당 멤버 가져오기 By Token
         Optional<Member> memberOptional = memberRepository.findByStudentId(jwtTokenProvider.getUserPk(token));
@@ -91,10 +91,11 @@ public class MemberService {
         if(memberOptional.isPresent()){
             Member member = memberOptional.get();
             // 가입한 동아리
-            List<String> clubList = new ArrayList<>();
+            HashMap<String, String> clubList = new HashMap<>();
             for (ClubJoin clubJoin: member.getClubJoinList()) {
                 String clubName = clubJoin.getClub().getClubName();
-                clubList.add(clubName);
+                RequestStatus status = clubJoin.getStatus();
+                clubList.put(clubName, status.name());
             }
 
             MemberDetailsDto memberDetailsDto = MemberDetailsDto.builder()

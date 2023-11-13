@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.Map;
@@ -36,9 +37,9 @@ public class MemberController {
     }
 
     @GetMapping("/member")
-    public ResponseEntity<?> getSelectedMember(@RequestHeader("Access_Token") String token){
+    public ResponseEntity<?> getSelectedMember(@RequestHeader("Access_Token") String token, @RequestPart(value = "profileImage") MultipartFile imageFile){
 
-        ResponseDto memberDetails = memberService.getMemberDetails(token);
+        ResponseDto memberDetails = memberService.getMemberDetails(token, imageFile);
         return ResponseEntity.ok(memberDetails);
     }
 
