@@ -1,19 +1,21 @@
 package com.donggram.back.service;
 
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.donggram.back.dto.*;
-import com.donggram.back.entity.ClubJoin;
-import com.donggram.back.entity.Member;
-import com.donggram.back.entity.RefreshToken;
-import com.donggram.back.entity.RequestStatus;
+import com.donggram.back.entity.*;
 import com.donggram.back.jwt.JwtTokenProvider;
+import com.donggram.back.repository.ImageProfileRepository;
 import com.donggram.back.repository.MemberRepository;
 import com.donggram.back.repository.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.*;
 
 @Service
@@ -24,6 +26,11 @@ public class MemberService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
+    private final AmazonS3Client amazonS3Client;
+    private final ImageProfileRepository imageProfileRepository;
+
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucket;
 
     public ResponseDto join(SignUpDto signUpDto) throws Exception{
         if(memberRepository.findByStudentId(signUpDto.getStudentId()).isPresent()){
@@ -41,7 +48,6 @@ public class MemberService {
                 .college2(signUpDto.getCollege2())
                 .major1(signUpDto.getMajor1())
                 .major2(signUpDto.getMajor2())
-                .profileImage("NULL")
                 .roles(Collections.singletonList("ROLE_USER"))
                 .build();
         member.encodePassword(passwordEncoder);
@@ -82,7 +88,7 @@ public class MemberService {
     }
     
     @Transactional
-    public ResponseDto getMemberDetails(String token, MultipartFile imageFile){
+    public ResponseDto getMemberDetails(String token){
 
 
         // 해당 멤버 가져오기 By Token
@@ -97,6 +103,8 @@ public class MemberService {
                 RequestStatus status = clubJoin.getStatus();
                 clubList.put(clubName, status.name());
             }
+            String profileImageUrl = member.getImageProfile() != null ? member.getImageProfile().getUrl() : null;
+
 
             MemberDetailsDto memberDetailsDto = MemberDetailsDto.builder()
                     .memberId(member.getId())
@@ -106,7 +114,7 @@ public class MemberService {
                     .major1(member.getMajor1())
                     .college2(member.getCollege2())
                     .major2(member.getMajor2())
-                    .profileImage(member.getProfileImage())
+                    .profileImage(profileImageUrl)
                     .clubList(clubList)
                     .build();
 
@@ -127,12 +135,45 @@ public class MemberService {
     @Transactional
     public ResponseDto updateDetails(String token, ProfileUpdateDto profileUpdateDto) {
         Member member = memberRepository.findByStudentId(jwtTokenProvider.getUserPk(token)).get();
+
+
+        MultipartFile file = profileUpdateDto.getProfileImage();
+
+        if (file != null && !file.isEmpty()) {
+            ImageProfile imageProfile = uploadImage(file, member);
+            member.updateImageProfile(imageProfile);
+        }
+
         member.updateProfile(profileUpdateDto);
+
+
         return ResponseDto.builder()
                 .status(200)
                 .responseMessage("수정된 프로필 정보 API")
                 .data(new MemberDetailsDto(member))
                 .build();
+    }
+
+    private ImageProfile uploadImage(MultipartFile file, Member member) {
+        try {
+            String imageFileName = member.getId() + "_" + file.getOriginalFilename();
+
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentType(file.getContentType());
+            metadata.setContentLength(file.getSize());
+
+            amazonS3Client.putObject(bucket, imageFileName, file.getInputStream(), metadata);
+
+            ImageProfile image = ImageProfile.builder()
+                    .url("https://image-profile-bucket.s3.ap-northeast-2.amazonaws.com/" + imageFileName)
+                    .member(member)
+                    .build();
+
+            ImageProfile save = imageProfileRepository.save(image);
+            return save;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
 

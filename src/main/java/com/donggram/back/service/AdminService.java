@@ -68,7 +68,7 @@ public class AdminService {
                     .college2(member.getCollege2())
                     .major2(member.getMajor2())
                     .role(member.getRoles().get(0))
-                    .profileImage(member.getProfileImage())
+                    .profileImage(member.getImageProfile().getUrl())
                     .clubList(clubList)
                     .build();
 

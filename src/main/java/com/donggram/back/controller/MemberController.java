@@ -37,14 +37,16 @@ public class MemberController {
     }
 
     @GetMapping("/member")
-    public ResponseEntity<?> getSelectedMember(@RequestHeader("Access_Token") String token, @RequestPart(value = "profileImage") MultipartFile imageFile){
+    public ResponseEntity<?> getSelectedMember(@RequestHeader("Access_Token") String token){
 
-        ResponseDto memberDetails = memberService.getMemberDetails(token, imageFile);
+        ResponseDto memberDetails = memberService.getMemberDetails(token);
         return ResponseEntity.ok(memberDetails);
     }
 
     @PutMapping("/member")
-    public ResponseEntity<?> updateProfile(@RequestHeader("Access_Token") String token, @RequestBody ProfileUpdateDto profileUpdateDto) {
+    public ResponseEntity<?> updateProfile(@RequestHeader("Access_Token") String token, @RequestPart(value = "profileImage") MultipartFile imageFile, @RequestPart(value = "profileUpdateDto") ProfileUpdateDto profileUpdateDto) {
+
+        profileUpdateDto.addMultipartFile(imageFile);
         ResponseDto memberDetails = memberService.updateDetails(token, profileUpdateDto);
         return ResponseEntity.ok(memberDetails);
     }

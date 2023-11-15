@@ -49,8 +49,8 @@ public class Member extends BaseTimeEntity implements UserDetails {
     @Column
     String major2;
 
-    @Column
-    String profileImage;
+    @OneToOne(mappedBy = "member")
+    ImageProfile imageProfile;
 
     @OneToOne
     private ClubRequest clubRequest;
@@ -109,7 +109,7 @@ public class Member extends BaseTimeEntity implements UserDetails {
         this.studentId = profileUpdateDto.getStudentId();
         this.major1 = profileUpdateDto.getMajor1();
         this.major2 = profileUpdateDto.getMajor2();
-        // this.profileImage = profileUpdateDto.getProfileImage();
+//        this.imageProfile = profileUpdateDto.getProfileImage();
 
         // 역할 정보를 업데이트
         if (profileUpdateDto.getRole() != null) {
@@ -117,4 +117,8 @@ public class Member extends BaseTimeEntity implements UserDetails {
             this.roles.addAll(Collections.singleton(profileUpdateDto.getRole())); // 새로운 역할 정보 추가
         }
     }
+    public void updateImageProfile(ImageProfile imageProfile){
+        this.imageProfile = imageProfile;
+    }
+
 }

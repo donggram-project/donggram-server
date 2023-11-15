@@ -1,11 +1,14 @@
 package com.donggram.back.entity;
 
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
+@NoArgsConstructor
 public class ImageProfile {
 
     @Id
@@ -18,5 +21,11 @@ public class ImageProfile {
     @OneToOne
     @JoinColumn(name = "member_id")
     private Member member;
+
+    @Builder
+    public ImageProfile (String url, Member member){
+        this.url = url;
+        this.member = member;
+    }
 
 }

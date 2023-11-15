@@ -17,4 +17,8 @@ public class ProfileUpdateDto {
     private String role;
     private MultipartFile profileImage;
 
+
+    public void addMultipartFile(MultipartFile multipartFile){
+        this.profileImage = multipartFile;
+    }
 }

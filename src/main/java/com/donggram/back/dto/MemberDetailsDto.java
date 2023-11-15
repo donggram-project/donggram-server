@@ -34,7 +34,7 @@ public class MemberDetailsDto {
         this.college2 = member.getCollege2();
         this.major2 = member.getMajor2();
         this.role = member.getRoles().get(0);
-        this.profileImage = member.getProfileImage();
+        this.profileImage = member.getImageProfile().getUrl();
 
         HashMap<String, String> clubList = new HashMap<>();
         for (ClubJoin clubJoin: member.getClubJoinList()) {
