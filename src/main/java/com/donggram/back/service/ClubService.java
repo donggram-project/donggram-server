@@ -55,9 +55,6 @@ public class ClubService {
         List<ClubDto> clubDtoList = new ArrayList<>();
         List<Club> clubsByFilters = clubRepository.searchClubs("%" + keyword + "%");
         if (!clubsByFilters.isEmpty()){
-            System.out.println(clubsByFilters.get(0).getCollege());
-            System.out.println("test");
-
             for (Club club : clubsByFilters) {
                 clubDtoList.add(ClubDto.builder()
                         .clubId(club.getId())
@@ -68,14 +65,9 @@ public class ClubService {
                         .build());
             }
 
-        }else{
-            System.out.println("test2");
-
         }
-
-
         return ResponseDto.builder()
-                .status(400)
+                .status(200)
                 .responseMessage("검색 결과 조회 API")
                 .data(clubDtoList)
                 .build();
