@@ -1,9 +1,6 @@
 package com.donggram.back.service;
 
-import com.donggram.back.dto.ClubDetailsDto;
-import com.donggram.back.dto.ClubDto;
-import com.donggram.back.dto.NewClubDto;
-import com.donggram.back.dto.ResponseDto;
+import com.donggram.back.dto.*;
 import com.donggram.back.entity.*;
 import com.donggram.back.jwt.JwtTokenProvider;
 import com.donggram.back.repository.*;
@@ -55,18 +52,32 @@ public class ClubService {
 
     @Transactional
     public ResponseDto findByKeyword(String keyword){
+        List<ClubDto> clubDtoList = new ArrayList<>();
         List<Club> clubsByFilters = clubRepository.searchClubs("%" + keyword + "%");
         if (!clubsByFilters.isEmpty()){
-            System.out.println(clubsByFilters.get(0));
+            System.out.println(clubsByFilters.get(0).getCollege());
             System.out.println("test");
+
+            for (Club club : clubsByFilters) {
+                clubDtoList.add(ClubDto.builder()
+                        .clubId(club.getId())
+                        .clubName(club.getClubName())
+                        .college(club.getCollege().getName())
+                        .division(club.getDivision().getName())
+                        .isRecruitment(club.isRecruitment())
+                        .build());
+            }
+
         }else{
             System.out.println("test2");
+
         }
 
+
         return ResponseDto.builder()
-                .status(200)
-                .responseMessage("모든 동아리 정보 API")
-                .data(clubsByFilters)
+                .status(400)
+                .responseMessage("검색 결과 조회 API")
+                .data(clubDtoList)
                 .build();
     }
 

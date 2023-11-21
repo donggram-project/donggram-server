@@ -13,9 +13,8 @@ import java.util.Optional;
 public interface ClubRepository extends JpaRepository<Club, Long> {
 
     @Query("SELECT c FROM Club c WHERE " +
-            "(c.clubName LIKE :keyword OR c.content LIKE :keyword)")
-    List<Club> searchClubs(
-            @Param("keyword") String keyword);
+            "(c.clubName LIKE %:keyword% OR c.content LIKE %:keyword%)")
+    List<Club> searchClubs(@Param("keyword") String keyword);
 
     Optional<Club> findByClubName(String clubName);
 }

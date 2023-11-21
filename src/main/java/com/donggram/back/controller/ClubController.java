@@ -34,7 +34,7 @@ public class ClubController {
     // 카테고리에서 선택했을 때
     @GetMapping("/search")
     public ResponseEntity getSelectedClubs(
-          @RequestParam() String keyword
+          @RequestParam("keyword") String keyword
     ){
         ResponseDto clubs = clubService.findByKeyword(keyword);
         return ResponseEntity.ok(clubs);
