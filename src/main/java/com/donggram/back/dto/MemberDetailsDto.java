@@ -45,4 +45,8 @@ public class MemberDetailsDto {
         this.clubList = clubList;
     }
 
+    public void updateProfileImage(String profileImage){
+        this.profileImage = profileImage;
+    }
+
 }

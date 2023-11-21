@@ -58,7 +58,6 @@ public class AdminService {
                 RequestStatus status = clubJoin.getStatus();
                 clubList.put(clubName, status.name());
             }
-
             MemberDetailsDto memberDetailsDto = MemberDetailsDto.builder()
                     .memberId(member.getId())
                     .studentId(member.getStudentId())
@@ -68,9 +67,11 @@ public class AdminService {
                     .college2(member.getCollege2())
                     .major2(member.getMajor2())
                     .role(member.getRoles().get(0))
-                    .profileImage(member.getImageProfile().getUrl())
                     .clubList(clubList)
                     .build();
+            if(member.getImageProfile() != null){
+                memberDetailsDto.updateProfileImage(member.getImageProfile().getUrl());
+            }
 
             return ResponseDto.builder()
                     .status(200)
