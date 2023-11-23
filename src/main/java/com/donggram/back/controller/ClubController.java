@@ -55,6 +55,12 @@ public class ClubController {
         return ResponseEntity.ok(responseDto);
     }
 
+    @GetMapping()
+    public ResponseEntity getSelectedClubs(@RequestParam("collegeIds") List<Long> collegeIds, @RequestParam("divisionIds") List<Long> divisionIds){
+        ResponseDto selectedClubs = clubService.getSelectedClubs(collegeIds, divisionIds);
+        return ResponseEntity.ok(selectedClubs);
+    }
+
     @PostMapping("/new")
     public ResponseEntity postNewClub(@RequestBody NewClubDto newClubDto, @RequestHeader("Access_Token") String token){
 

@@ -51,6 +51,37 @@ public class ClubService {
     }
 
     @Transactional
+    public ResponseDto getSelectedClubs(List<Long> collegeIds, List<Long> divisionIds){
+        List<Club> clubs = new ArrayList<>();
+        List<ClubDto> clubDtos = new ArrayList<>();
+        for(int i = 0; i < collegeIds.size(); i++){
+            for (int j = 0; j < divisionIds.size(); j++) {
+                List<Club> clubsByCollegeAndDivision = clubRepository.findClubsByCollegeAndDivision(collegeIds.get(i), divisionIds.get(j));
+                for(Club club : clubsByCollegeAndDivision){
+                    clubs.add(club);
+                }
+            }
+        }
+
+        for (Club club : clubs) {
+            clubDtos.add(ClubDto.builder()
+                    .clubId(club.getId())
+                    .clubName(club.getClubName())
+                    .college(club.getCollege().getName())
+                    .division(club.getDivision().getName())
+                    .isRecruitment(club.isRecruitment())
+                    .build());
+        }
+
+        return ResponseDto.builder()
+                .status(200)
+                .responseMessage("해당되는 동아리 정보 API")
+                .data(clubDtos)
+                .build();
+
+    }
+
+    @Transactional
     public ResponseDto findByKeyword(String keyword){
         List<ClubDto> clubDtoList = new ArrayList<>();
         List<Club> clubsByFilters = clubRepository.searchClubs("%" + keyword + "%");

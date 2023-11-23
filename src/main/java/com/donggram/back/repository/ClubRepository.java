@@ -17,4 +17,7 @@ public interface ClubRepository extends JpaRepository<Club, Long> {
     List<Club> searchClubs(@Param("keyword") String keyword);
 
     Optional<Club> findByClubName(String clubName);
+
+    @Query("SELECT c FROM Club c WHERE c.college.id = :collegeId AND c.division.id = :divisionId")
+    List<Club> findClubsByCollegeAndDivision(@Param("collegeId") long collegeId, @Param("divisionId") long divisionId);
 }
