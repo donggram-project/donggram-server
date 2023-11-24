@@ -65,27 +65,35 @@ public class MemberService {
         Member member = memberRepository.findByStudentId(signInDto.getStudentId())
                 .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 학번입니다."));
 
+        // 입력된 비밀번호 확인 (예: BCrypt 해시 함수 사용)
+        if (passwordEncoder.matches(signInDto.getPassword(), member.getPassword())) {
+            // 비밀번호 일치 시 로그인 처리
 
-        TokenInfo tokenInfo = jwtTokenProvider.generateToken(signInDto.getStudentId(), member.getRoles());
+            TokenInfo tokenInfo = jwtTokenProvider.generateToken(signInDto.getStudentId(), member.getRoles());
 
-        //RefreshToken 있는지 확인
-        Optional<RefreshToken> refreshToken = refreshTokenRepository.findByStudentId(signInDto.getStudentId());
+            // RefreshToken 있는지 확인
+            Optional<RefreshToken> refreshToken = refreshTokenRepository.findByStudentId(signInDto.getStudentId());
 
-        //있으면 refreshToken 업데이트
-        //없으면 새로 만들고 저장
-        if(refreshToken.isPresent()){
-            refreshTokenRepository.save(refreshToken.get().updateToken(tokenInfo.getRefreshToken()));
-        }else {
-            RefreshToken newToken = new RefreshToken(tokenInfo.getRefreshToken(), signInDto.getStudentId());
-            refreshTokenRepository.save(newToken);
+            // 있으면 refreshToken 업데이트
+            // 없으면 새로 만들고 저장
+            if (refreshToken.isPresent()) {
+                refreshTokenRepository.save(refreshToken.get().updateToken(tokenInfo.getRefreshToken()));
+            } else {
+                RefreshToken newToken = new RefreshToken(tokenInfo.getRefreshToken(), signInDto.getStudentId());
+                refreshTokenRepository.save(newToken);
+            }
+
+            return ResponseDto.builder()
+                    .status(200)
+                    .responseMessage("로그인 성공!")
+                    .data(tokenInfo)
+                    .build();
+        } else {
+            // 비밀번호가 일치하지 않을 경우 처리
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
-
-        return ResponseDto.builder()
-                .status(200)
-                .responseMessage("로그인 성공!")
-                .data(tokenInfo)
-                .build();
     }
+
     
     @Transactional
     public ResponseDto getMemberDetails(String token){
