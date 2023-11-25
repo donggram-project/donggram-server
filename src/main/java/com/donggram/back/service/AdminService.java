@@ -277,26 +277,23 @@ public class AdminService {
     }
 
     @Transactional
-    public ResponseDto updateClubDetails(Long clubRequestId, ClubProfileUpdateDto clubProfileUpdateDto, MultipartFile multipartFile){
+    public ResponseDto updateClubDetails(Long clubRequestId, ClubProfileUpdateDto clubProfileUpdateDto){
         ClubRequest clubRequest = clubRequestRepository.findById(clubRequestId).orElseThrow(() -> new RuntimeException("해당 동아리생성 엔티티가 존재하지 않습니다."));
 
         Club club = clubRequest.getClub();
 
         club.updateClubProfile(clubProfileUpdateDto, collegeRepository, divisionRepository);
 
-        System.out.println("1111111111111111");
 
-        ImageClub imageClub = imageClubRepository.findByClubId(club.getId()).orElseThrow(() -> new RuntimeException("해당 동아리이미지 엔티티가 존재하지 않습니다."));
+//        ImageClub imageClub = imageClubRepository.findByClubId(club.getId()).orElseThrow(() -> new RuntimeException("해당 동아리이미지 엔티티가 존재하지 않습니다."));
 
 
-        if (!multipartFile.isEmpty() && multipartFile != null){
-            System.out.println("akdljf,x.cnvklzcjiajgi;e");
-            String updateImageUrl = uploadImage(multipartFile, clubRequest);
-            imageClub.uploadCustomImage(updateImageUrl);
-        } else {
-            System.out.println("imageProfile Null");
-            imageClub.uploadCustomImage(club.getImageClub().getUrl());
-        }
+//        if (!multipartFile.isEmpty() && multipartFile != null){
+//            String updateImageUrl = uploadImage(multipartFile, clubRequest);
+//            imageClub.uploadCustomImage(updateImageUrl);
+//        } else {
+//            imageClub.uploadCustomImage(club.getImageClub().getUrl());
+//        }
 
         ClubDetailsDto clubDetailsDto = ClubDetailsDto.builder()
                 .clubId(club.getId())
