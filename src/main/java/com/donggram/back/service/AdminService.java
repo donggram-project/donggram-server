@@ -229,6 +229,30 @@ public class AdminService {
                 .responseMessage("동아리 생성 요청 거절").build();
     }
 
+    @Transactional
+    public ResponseDto getAllMemberBySelectedClub(Long clubId){
+        List<ClubMemberDto> clubMemberDtos = new ArrayList<>();
+
+        Club club = clubRepository.findById(clubId).orElseThrow(() -> new RuntimeException("해당 동아리가 존재하지 않습니다."));
+        for ( ClubJoin clubJoin : club.getClubJoinList()) {
+            ClubMemberDto clubMemberDto = ClubMemberDto.builder()
+                    .division(clubJoin.getMember().getMajor1())
+                    .name(clubJoin.getMember().getName())
+                    .join_dated(clubJoin.getJoinDate())
+                    .id(clubJoin.getId())
+                    .status(clubJoin.getStatus())
+                    .build();
+
+            clubMemberDtos.add(clubMemberDto);
+        }
+
+        return ResponseDto.builder()
+                .data(clubMemberDtos)
+                .status(200)
+                .responseMessage("동아리 멤버 목록 API")
+                .build();
+    }
+
 }
 
 

@@ -6,6 +6,7 @@ import com.donggram.back.service.AdminService;
 import com.donggram.back.service.ClubService;
 import com.donggram.back.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -53,6 +54,13 @@ public class AdminController {
         return ResponseEntity.ok(clubDetails);
     }
 
+    @GetMapping("/clubs/{id}/members")
+    public ResponseEntity getAllMemberBySelectedClub(@PathVariable("id") Long clubId){
+        ResponseDto allMemberBySelectedClub = adminService.getAllMemberBySelectedClub(clubId);
+
+        return ResponseEntity.ok(allMemberBySelectedClub);
+    }
+
     @PutMapping("/clubs/{id}/approve")
     public ResponseEntity approveClubCreation(@PathVariable Long id){
         ResponseDto approve = adminService.approve(id);
@@ -76,5 +84,7 @@ public class AdminController {
         ResponseDto reject = clubService.memberReject(memberId, clubId);
         return ResponseEntity.ok(reject);
     }
+
+
 
 }
