@@ -166,13 +166,15 @@ public class MemberService {
         for (ClubJoin clubJoin : member.getClubJoinList()){
             Club club = clubJoin.getClub();
 
-            clubListDtos.add(ClubDto.builder()
-                    .clubId(club.getId())
-                    .clubName(club.getClubName())
-                    .college(club.getCollege().getName())
-                    .division(club.getDivision().getName())
-                    .isRecruitment(club.isRecruitment())
-                    .build());
+            if (clubJoin.getStatus().name() == "approve"){
+                clubListDtos.add(ClubDto.builder()
+                        .clubId(club.getId())
+                        .clubName(club.getClubName())
+                        .college(club.getCollege().getName())
+                        .division(club.getDivision().getName())
+                        .isRecruitment(club.isRecruitment())
+                        .build());
+            }
         }
 
         return ResponseDto.builder()
