@@ -45,7 +45,7 @@ public class Club {
     private String recruitment_period;
 
     @OneToOne(fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name = "imageClub_id")
+    @JoinColumn(name = "image_club_id")
     private ImageClub imageClub;
 
     @OneToOne(fetch = FetchType.LAZY, orphanRemoval = true)

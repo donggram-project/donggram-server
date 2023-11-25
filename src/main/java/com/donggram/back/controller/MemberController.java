@@ -51,5 +51,11 @@ public class MemberController {
         return ResponseEntity.ok(memberDetails);
     }
 
+    @GetMapping("/member/clubs")
+    public ResponseEntity getClubList(@RequestHeader("Access_Token") String token){
+        ResponseDto clubList = memberService.getClubList(token);
+        return ResponseEntity.ok(clubList);
+    }
+
 
 }

@@ -158,6 +158,31 @@ public class MemberService {
     }
 
     @Transactional
+    public ResponseDto getClubList(String token){
+        Member member = memberRepository.findByStudentId(jwtTokenProvider.getUserPk(token)).get();
+
+        List<ClubDto> clubListDtos = new ArrayList<>();
+
+        for (ClubJoin clubJoin : member.getClubJoinList()){
+            Club club = clubJoin.getClub();
+
+            clubListDtos.add(ClubDto.builder()
+                    .clubId(club.getId())
+                    .clubName(club.getClubName())
+                    .college(club.getCollege().getName())
+                    .division(club.getDivision().getName())
+                    .isRecruitment(club.isRecruitment())
+                    .build());
+        }
+
+        return ResponseDto.builder()
+                .status(200)
+                .responseMessage("내 동아리 정보 API")
+                .data(clubListDtos)
+                .build();
+    }
+
+    @Transactional
     public ResponseDto updateDetails(String token, MultipartFile multipartFile) {
         Member member = memberRepository.findByStudentId(jwtTokenProvider.getUserPk(token)).get();
 
