@@ -18,5 +18,6 @@ public class ClubListDto {
     private String major;
     private String apply_date;
     private String status;
+    private String clubImage;
 
 }

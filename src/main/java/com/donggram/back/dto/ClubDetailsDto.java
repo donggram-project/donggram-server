@@ -22,5 +22,6 @@ public class ClubDetailsDto {
     private final String recruitmentPeriod;
     private final boolean isRecruitment;
     private final String writer;
+    private final String ClubImage;
 
 }

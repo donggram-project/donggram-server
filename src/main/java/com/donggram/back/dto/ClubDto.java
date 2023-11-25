@@ -14,4 +14,5 @@ public class ClubDto {
     private final String content;
     private final String RecuritPeriod;
     private final boolean isRecruitment;
+    private final String clubImage;
 }

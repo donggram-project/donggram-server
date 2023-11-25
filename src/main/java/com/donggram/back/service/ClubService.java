@@ -1,16 +1,22 @@
 package com.donggram.back.service;
 
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.donggram.back.dto.*;
 import com.donggram.back.entity.*;
 import com.donggram.back.jwt.JwtTokenProvider;
 import com.donggram.back.repository.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -27,6 +33,10 @@ public class ClubService {
     private final MemberRepository memberRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final ClubRequestRepository clubRequestRepository;
+    private final AmazonS3Client amazonS3Client;
+    private final ImageClubRepository imageClubRepository;
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucket;
 
 
     //모든 동아리 정보 가져오기
@@ -210,6 +220,7 @@ public class ClubService {
 
 
     @Transactional
+    @JsonIgnore
     public ResponseDto postNewClub(NewClubDto newClubDto, String token){
 
         String studentId = jwtTokenProvider.getUserPk(token);
@@ -237,10 +248,22 @@ public class ClubService {
 
             clubRequestRepository.save(clubRequest);
 
+            ClubRequestDto build = ClubRequestDto.builder()
+                    .college(clubRequest.getCollege())
+                    .division(clubRequest.getDivision())
+                    .clubName(clubRequest.getClubName())
+                    .imageClub(clubRequest.getImageClub().getUrl())
+                    .club_created(clubRequest.getClub_created())
+                    .isRecruitment(clubRequest.isRecruitment())
+                    .recruitment_period(clubRequest.getRecruitment_period())
+                    .status(clubRequest.getStatus().toString())
+                    .content(clubRequest.getContent())
+                    .build();
+
             return ResponseDto.builder()
                     .status(200)
                     .responseMessage("동아리 생성 요청 완료")
-                    .data(clubRequest)
+                    .data(build)
                     .build();
         }
     }
@@ -258,7 +281,28 @@ public class ClubService {
         String formattedDate = now.format(formatter);
 
         return formattedDate;
+    }
 
+    private ImageClub uploadImage(MultipartFile file, Club club) {
+        try {
+            String imageFileName = "club_" + club.getId() + "_" + file.getOriginalFilename();
+
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentType(file.getContentType());
+            metadata.setContentLength(file.getSize());
+
+            amazonS3Client.putObject(bucket, imageFileName, file.getInputStream(), metadata);
+
+            ImageClub image = ImageClub.builder()
+                    .url("https://image-profile-bucket.s3.ap-northeast-2.amazonaws.com/" + imageFileName)
+                    .club(club)
+                    .build();
+
+            ImageClub save = imageClubRepository.save(image);
+            return save;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 

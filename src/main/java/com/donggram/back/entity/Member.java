@@ -64,7 +64,10 @@ public class Member extends BaseTimeEntity implements UserDetails {
     @Builder.Default
     private List<String> roles = new ArrayList<>();
 
-    
+    public void setImageProfile(ImageProfile imageProfile) {
+        this.imageProfile = imageProfile;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.roles.stream()

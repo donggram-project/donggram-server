@@ -32,13 +32,17 @@ public class MemberService {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    public ResponseDto join(SignUpDto signUpDto) throws Exception{
-        if(memberRepository.findByStudentId(signUpDto.getStudentId()).isPresent()){
-            throw new Exception("이미 가입된 학번 입니다.");
+    @Transactional
+    public ResponseDto join(SignUpDto signUpDto) throws Exception {
+        if (memberRepository.findByStudentId(signUpDto.getStudentId()).isPresent()) {
+            throw new Exception("이미 가입된 학번입니다.");
         }
-        if(!signUpDto.getPassword().equals(signUpDto.getCheckPassword())){
+        if (!signUpDto.getPassword().equals(signUpDto.getCheckPassword())) {
             throw new Exception("비밀번호가 일치하지 않습니다.");
         }
+
+        ImageProfile imageProfile = new ImageProfile();
+        imageProfile.uploadBasicImage();
 
         Member member = Member.builder()
                 .studentId(signUpDto.getStudentId())
@@ -50,9 +54,21 @@ public class MemberService {
                 .major2(signUpDto.getMajor2())
                 .roles(Collections.singletonList("ROLE_USER"))
                 .build();
-        member.encodePassword(passwordEncoder);
+
+        member.setImageProfile(imageProfile); // Member 객체에 ImageProfile 설정
+
+        // 영속성 컨텍스트에 Member 객체 저장
         memberRepository.save(member);
 
+        imageProfile.setMember(member); // ImageProfile 객체에 Member 설정
+
+        // 영속성 컨텍스트에 ImageProfile 객체 저장
+        imageProfileRepository.save(imageProfile);
+
+        member.encodePassword(passwordEncoder);
+
+        // 이미지 프로필 URL 출력 (테스트용)
+        System.out.println(member.getImageProfile().getUrl());
 
         return ResponseDto.builder()
                 .status(200)
@@ -60,6 +76,7 @@ public class MemberService {
                 .data("NULL")
                 .build();
     }
+
 
     public ResponseDto login(SignInDto signInDto) {
         Member member = memberRepository.findByStudentId(signInDto.getStudentId())
@@ -112,7 +129,7 @@ public class MemberService {
                 clubList.put(clubName, status.name());
             }
             String profileImageUrl = member.getImageProfile() != null ? member.getImageProfile().getUrl() : null;
-
+            System.out.println(member.getImageProfile().getUrl());
 
             MemberDetailsDto memberDetailsDto = MemberDetailsDto.builder()
                     .memberId(member.getId())
@@ -144,13 +161,14 @@ public class MemberService {
     public ResponseDto updateDetails(String token, ProfileUpdateDto profileUpdateDto) {
         Member member = memberRepository.findByStudentId(jwtTokenProvider.getUserPk(token)).get();
 
-
-        MultipartFile file = profileUpdateDto.getProfileImage();
-
-        if (file != null && !file.isEmpty()) {
-            ImageProfile imageProfile = uploadImage(file, member);
-            member.updateImageProfile(imageProfile);
+        if (profileUpdateDto.getProfileImage() != null){
+            MultipartFile file = profileUpdateDto.getProfileImage();
+            if (file != null && !file.isEmpty()) {
+                ImageProfile imageProfile = uploadImage(file, member);
+                member.updateImageProfile(imageProfile);
+            }
         }
+
 
         member.updateProfile(profileUpdateDto);
 
@@ -164,7 +182,7 @@ public class MemberService {
 
     private ImageProfile uploadImage(MultipartFile file, Member member) {
         try {
-            String imageFileName = member.getId() + "_" + file.getOriginalFilename();
+            String imageFileName = "member_" + member.getId() + "_" + file.getOriginalFilename();
 
             ObjectMetadata metadata = new ObjectMetadata();
             metadata.setContentType(file.getContentType());

@@ -31,6 +31,10 @@ public class ClubRequest {
     @Column(name = "CLUB_CONTENT")
     private String content;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "imageClub_id")
+    private ImageClub imageClub;
+
     @Column(name = "CLUB_RECRUITMENT_PERIOD")
     private String recruitment_period;
 

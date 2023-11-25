@@ -3,6 +3,7 @@ package com.donggram.back.service;
 import com.donggram.back.dto.*;
 import com.donggram.back.entity.*;
 import com.donggram.back.repository.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -114,6 +115,7 @@ public class AdminService {
 
     //모두 조회
     @Transactional
+    @JsonIgnore
     public ResponseDto getAllClubs() {
         List<ClubListDto> clubList = new ArrayList<>();
         for (ClubRequest clubRequest : clubRequestRepository.findAll()) {

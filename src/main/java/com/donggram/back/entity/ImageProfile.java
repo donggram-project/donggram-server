@@ -28,4 +28,11 @@ public class ImageProfile {
         this.member = member;
     }
 
+    public void setMember(Member member) {
+        this.member = member;
+    }
+
+    public void uploadBasicImage(){
+        this.url = "https://image-profile-bucket.s3.ap-northeast-2.amazonaws.com/basic_profile.png";
+    }
 }

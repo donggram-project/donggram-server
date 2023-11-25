@@ -1,20 +1,21 @@
 package com.donggram.back.dto;
 
-
 import lombok.*;
 
 @Getter
-@Builder
-@NoArgsConstructor
+@RequiredArgsConstructor
 @AllArgsConstructor
-public class NewClubDto {
+@Builder
+public class ClubRequestDto {
 
     private String college;
     private String division;
     private String clubName;
     private String content;
+    private String imageClub;
     private String recruitment_period;
-    private String clubUrl;
     private boolean isRecruitment;
+    private String club_created;
+    private String status;
 
 }
