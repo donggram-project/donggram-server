@@ -262,7 +262,7 @@ public class AdminService {
                     .division(clubJoin.getMember().getMajor1())
                     .name(clubJoin.getMember().getName())
                     .join_dated(clubJoin.getJoinDate())
-                    .id(clubJoin.getId())
+                    .id(clubJoin.getMember().getId())
                     .status(clubJoin.getStatus())
                     .build();
 
