@@ -158,20 +158,16 @@ public class MemberService {
     }
 
     @Transactional
-    public ResponseDto updateDetails(String token, ProfileUpdateDto profileUpdateDto) {
+    public ResponseDto updateDetails(String token, MultipartFile multipartFile) {
         Member member = memberRepository.findByStudentId(jwtTokenProvider.getUserPk(token)).get();
 
-        if (profileUpdateDto.getProfileImage() != null){
-            MultipartFile file = profileUpdateDto.getProfileImage();
+        if (multipartFile != null) {
+            MultipartFile file = multipartFile;
             if (file != null && !file.isEmpty()) {
                 ImageProfile imageProfile = uploadImage(file, member);
                 member.updateImageProfile(imageProfile);
             }
         }
-
-
-        member.updateProfile(profileUpdateDto);
-
 
         return ResponseDto.builder()
                 .status(200)

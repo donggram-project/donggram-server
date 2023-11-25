@@ -317,7 +317,7 @@ public class ClubService {
         return formattedDate;
     }
 
-    private String uploadImage(MultipartFile file, ClubRequest clubRequest) {
+    public String uploadImage(MultipartFile file, ClubRequest clubRequest) {
         try {
             String imageFileName = "club_" + clubRequest.getId() + "_" + file.getOriginalFilename();
 
@@ -334,6 +334,7 @@ public class ClubService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
     }
 
 

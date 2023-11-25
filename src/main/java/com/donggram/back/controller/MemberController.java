@@ -44,10 +44,10 @@ public class MemberController {
     }
 
     @PutMapping("/member")
-    public ResponseEntity<?> updateProfile(@RequestHeader("Access_Token") String token, @RequestPart(value = "profileImage") MultipartFile imageFile, @RequestPart(value = "profileUpdateDto") ProfileUpdateDto profileUpdateDto) {
+    public ResponseEntity<?> updateProfile(@RequestHeader("Access_Token") String token, @RequestPart(value = "profileImage") MultipartFile imageFile) {
 
-        profileUpdateDto.addMultipartFile(imageFile);
-        ResponseDto memberDetails = memberService.updateDetails(token, profileUpdateDto);
+//        profileUpdateDto.addMultipartFile(imageFile);
+        ResponseDto memberDetails = memberService.updateDetails(token, imageFile);
         return ResponseEntity.ok(memberDetails);
     }
 

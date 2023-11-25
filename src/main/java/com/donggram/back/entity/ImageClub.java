@@ -22,6 +22,9 @@ public class ImageClub {
     @JoinColumn(name = "clubRequest_id")
     private ClubRequest clubRequest;
 
+    @OneToOne(mappedBy = "imageClub")
+    private Club club;
+
     @Builder
     public ImageClub (String url, ClubRequest clubRequest){
         this.url = url;

@@ -86,7 +86,6 @@ public class Club {
             Division division = divisionRepository.findByName(clubProfileUpdateDto.getDivision()).orElseThrow(() -> new RuntimeException("해당 분과가 존재하지 않습니다."));
             this.division =division;
         }
-
         this.content = clubProfileUpdateDto.getContent();
         this.clubName = clubProfileUpdateDto.getClubName();
         this.clubCreated = clubProfileUpdateDto.getClubCreated();

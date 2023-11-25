@@ -1,14 +1,19 @@
 package com.donggram.back.service;
 
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.donggram.back.dto.*;
 import com.donggram.back.entity.*;
 import com.donggram.back.repository.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +29,11 @@ public class AdminService {
     private final CollegeRepository collegeRepository;
     private final DivisionRepository divisionRepository;
     private final ClubRepository clubRepository;
+    private final AmazonS3Client amazonS3Client;
+    private final ImageClubRepository imageClubRepository;
+
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucket;
 
     public ResponseDto getAllMembers() {
 
@@ -266,8 +276,58 @@ public class AdminService {
                 .build();
     }
 
-//    @Transactional
-//    public ResponseDto updateClubDetails(Long clubId){}
+    @Transactional
+    public ResponseDto updateClubDetails(Long clubRequestId, ClubProfileUpdateDto clubProfileUpdateDto, MultipartFile multipartFile){
+        ClubRequest clubRequest = clubRequestRepository.findById(clubRequestId).orElseThrow(() -> new RuntimeException("해당 동아리생성 엔티티가 존재하지 않습니다."));
+
+        Club club = clubRequest.getClub();
+
+        club.updateClubProfile(clubProfileUpdateDto, collegeRepository, divisionRepository);
+
+        if (multipartFile != null){
+            String updateImageUrl = uploadImage(multipartFile, clubRequest);
+            ImageClub imageClub = imageClubRepository.findByClubId(club.getId()).orElseThrow(() -> new RuntimeException("해당 동아리이미지 엔티티가 존재하지 않습니다."));
+            imageClub.uploadCustomImage(updateImageUrl);
+        }
+
+        ClubDetailsDto clubDetailsDto = ClubDetailsDto.builder()
+                .clubId(club.getId())
+                .clubName(club.getClubName())
+                .clubCreated(club.getClubCreated())
+                .college(club.getCollege().getName())
+                .division(club.getDivision().getName())
+                .ClubImage(club.getImageClub().getUrl())
+                .content(club.getContent())
+                .writer(club.getClubRequest().getMember().getName())
+                .recruitmentPeriod(club.getRecruitment_period())
+                .isRecruitment(club.isRecruitment())
+                .build();
+
+        return ResponseDto.builder()
+                .data(clubDetailsDto)
+                .status(200)
+                .responseMessage("동아리 멤버 목록 API")
+                .build();
+    }
+    private String uploadImage(MultipartFile file, ClubRequest clubRequest) {
+        try {
+            String imageFileName = "club_" + clubRequest.getId() + "_" + file.getOriginalFilename();
+
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentType(file.getContentType());
+            metadata.setContentLength(file.getSize());
+
+            amazonS3Client.putObject(bucket, imageFileName, file.getInputStream(), metadata);
+
+            String imageUrl = "https://image-profile-bucket.s3.ap-northeast-2.amazonaws.com/" + imageFileName;
+
+            return imageUrl;
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
 }
 

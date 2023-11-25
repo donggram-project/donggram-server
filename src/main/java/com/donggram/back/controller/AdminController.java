@@ -1,5 +1,7 @@
 package com.donggram.back.controller;
 
+import com.donggram.back.dto.ClubProfileUpdateDto;
+import com.donggram.back.dto.NewClubDto;
 import com.donggram.back.dto.ProfileUpdateDto;
 import com.donggram.back.dto.ResponseDto;
 import com.donggram.back.service.AdminService;
@@ -9,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/admin")
@@ -83,6 +86,14 @@ public class AdminController {
     public ResponseEntity rejectClubJoin(@RequestParam Long memberId, @RequestParam Long clubId){
         ResponseDto reject = clubService.memberReject(memberId, clubId);
         return ResponseEntity.ok(reject);
+    }
+
+    @PutMapping("/clubs/{id}")
+    public ResponseEntity updateSelecetedClub(@PathVariable("id") Long clubId, @RequestPart("ImageClub") MultipartFile imageFile, @RequestPart("ClubProfileUpdateDto") ClubProfileUpdateDto clubProfileUpdateDto){
+
+        ResponseDto responseDto = adminService.updateClubDetails(clubId, clubProfileUpdateDto, imageFile);
+
+        return ResponseEntity.ok(responseDto);
     }
 
 
