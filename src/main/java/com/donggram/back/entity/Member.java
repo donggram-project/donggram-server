@@ -49,7 +49,7 @@ public class Member extends BaseTimeEntity implements UserDetails {
     @Column
     String major2;
 
-    @OneToOne(mappedBy = "member")
+    @OneToOne(mappedBy = "member", orphanRemoval = true)
     ImageProfile imageProfile;
 
     @OneToOne
@@ -57,7 +57,7 @@ public class Member extends BaseTimeEntity implements UserDetails {
 
     // 일대다, 양방향
     @JsonIgnore
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", orphanRemoval = true)
     private final List<ClubJoin> clubJoinList = new ArrayList<>();
 
     @ElementCollection(fetch = FetchType.EAGER)

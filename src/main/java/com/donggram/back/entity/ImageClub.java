@@ -19,16 +19,24 @@ public class ImageClub {
     private String url;
 
     @OneToOne
-    @JoinColumn(name = "club_id")
-    private Club club;
-
-    @OneToOne
     @JoinColumn(name = "clubRequest_id")
     private ClubRequest clubRequest;
 
     @Builder
-    public ImageClub (String url, Club club){
+    public ImageClub (String url, ClubRequest clubRequest){
         this.url = url;
-        this.club = club;
+        this.clubRequest = clubRequest;
+    }
+
+    public void setClubRequest(ClubRequest clubRequest) {
+        this.clubRequest = clubRequest;
+    }
+
+    public void uploadBasicImage(){
+        this.url = "https://image-profile-bucket.s3.ap-northeast-2.amazonaws.com/basic_profile.png";
+    }
+
+    public void uploadCustomImage(String image){
+        this.url = image;
     }
 }

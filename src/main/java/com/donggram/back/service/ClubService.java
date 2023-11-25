@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.awt.*;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -221,10 +222,11 @@ public class ClubService {
 
     @Transactional
     @JsonIgnore
-    public ResponseDto postNewClub(NewClubDto newClubDto, String token){
+    public ResponseDto postNewClub(NewClubDto newClubDto, MultipartFile multipartFile, String token){
 
         String studentId = jwtTokenProvider.getUserPk(token);
         Member member = memberRepository.findByStudentId(studentId).orElseThrow(() -> new RuntimeException("해당 학번이 존재하지 않습니다."));
+
 
 
         //동아리 중복 확인
@@ -234,7 +236,12 @@ public class ClubService {
         if(byClubName.isPresent()){
             throw new RuntimeException("이미 존재하는 동아리 입니다.");
         }else{
-            ClubRequest clubRequest = ClubRequest.builder()
+
+
+
+           ImageClub imageClub = new ImageClub();
+
+           ClubRequest clubRequest = ClubRequest.builder()
                     .college(newClubDto.getCollege())
                     .division(newClubDto.getDivision())
                     .clubName(newClubDto.getClubName())
@@ -245,6 +252,19 @@ public class ClubService {
                     .status(RequestStatus.pending)
                     .member(member)
                     .build();
+
+            if (multipartFile.isEmpty()){
+                imageClub.uploadBasicImage();
+            }else {
+
+                String s = uploadImage(multipartFile, clubRequest);
+                imageClub.uploadCustomImage(s);
+            }
+
+
+            clubRequest.setImageClub(imageClub);
+            imageClub.setClubRequest(clubRequest);
+            imageClubRepository.save(imageClub);
 
             clubRequestRepository.save(clubRequest);
 
@@ -283,9 +303,9 @@ public class ClubService {
         return formattedDate;
     }
 
-    private ImageClub uploadImage(MultipartFile file, Club club) {
+    private String uploadImage(MultipartFile file, ClubRequest clubRequest) {
         try {
-            String imageFileName = "club_" + club.getId() + "_" + file.getOriginalFilename();
+            String imageFileName = "club_" + clubRequest.getId() + "_" + file.getOriginalFilename();
 
             ObjectMetadata metadata = new ObjectMetadata();
             metadata.setContentType(file.getContentType());
@@ -293,13 +313,10 @@ public class ClubService {
 
             amazonS3Client.putObject(bucket, imageFileName, file.getInputStream(), metadata);
 
-            ImageClub image = ImageClub.builder()
-                    .url("https://image-profile-bucket.s3.ap-northeast-2.amazonaws.com/" + imageFileName)
-                    .club(club)
-                    .build();
+            String imageUrl = "https://image-profile-bucket.s3.ap-northeast-2.amazonaws.com/" + imageFileName;
 
-            ImageClub save = imageClubRepository.save(image);
-            return save;
+            return imageUrl;
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

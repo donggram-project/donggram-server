@@ -2,6 +2,7 @@ package com.donggram.back.controller;
 
 import com.donggram.back.dto.ClubDto;
 import com.donggram.back.dto.NewClubDto;
+import com.donggram.back.dto.ProfileUpdateDto;
 import com.donggram.back.dto.ResponseDto;
 import com.donggram.back.entity.Club;
 import com.donggram.back.jwt.JwtTokenProvider;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -62,9 +64,9 @@ public class ClubController {
     }
 
     @PostMapping("/new")
-    public ResponseEntity postNewClub(@RequestBody NewClubDto newClubDto, @RequestHeader("Access_Token") String token){
+    public ResponseEntity postNewClub(@RequestHeader("Access_Token") String token, @RequestPart(value = "ImageClub") MultipartFile imageFile, @RequestPart(value = "newClubDto") NewClubDto newClubDto){
 
-        ResponseDto responseDto = clubService.postNewClub(newClubDto, token);
+        ResponseDto responseDto = clubService.postNewClub(newClubDto, imageFile, token);
 
         return ResponseEntity.ok(responseDto);
     }

@@ -38,9 +38,6 @@ public class Club {
     @Column(name = "CLUB_RECRUITMENT_PERIOD")
     private String recruitment_period;
 
-    @OneToOne(mappedBy = "club")
-    ImageClub imageClub;
-
     //일대다, 양방향
     @JsonIgnore
     @OneToMany(mappedBy = "club")

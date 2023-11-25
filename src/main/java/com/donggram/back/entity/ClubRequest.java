@@ -51,6 +51,10 @@ public class ClubRequest {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    public void setImageClub(ImageClub imageClub) {
+        this.imageClub = imageClub;
+    }
+
     public void updateStatus(RequestStatus status){
         this.status = status;
     }
