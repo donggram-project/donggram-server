@@ -188,13 +188,17 @@ public class MemberService {
     @Transactional
     public ResponseDto updateDetails(String token, MultipartFile multipartFile) {
         Member member = memberRepository.findByStudentId(jwtTokenProvider.getUserPk(token)).get();
-
         if (multipartFile != null) {
             MultipartFile file = multipartFile;
             if (file != null && !file.isEmpty()) {
                 ImageProfile imageProfile = uploadImage(file, member);
                 member.updateImageProfile(imageProfile);
             }
+        } else if (multipartFile.isEmpty()){
+            System.out.println("asdfagadhadgadfaewkgfjdjvadjfioasdhfalis");
+            ImageProfile imageProfile = new ImageProfile();
+            imageProfile.uploadBasicImage();
+            member.updateImageProfile(imageProfile);
         }
 
         return ResponseDto.builder()

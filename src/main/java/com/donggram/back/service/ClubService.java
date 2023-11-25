@@ -79,6 +79,7 @@ public class ClubService {
                     .clubId(club.getId())
                     .clubName(club.getClubName())
                     .college(club.getCollege().getName())
+                            .clubImage(club.getImageClub().getUrl())
                     .division(club.getDivision().getName())
                     .isRecruitment(club.isRecruitment())
                     .build());
@@ -104,6 +105,7 @@ public class ClubService {
                         .college(club.getCollege().getName())
                         .division(club.getDivision().getName())
                         .isRecruitment(club.isRecruitment())
+                                .clubImage(club.getImageClub().getUrl())
                         .build());
             }
 
@@ -130,6 +132,7 @@ public class ClubService {
                     .division(club.getDivision().getName())
                     .content(club.getContent())
                     .clubCreated(club.getClubCreated())
+                    .ClubImage(club.getImageClub().getUrl())
                     .build();
 
             return ResponseDto.builder()
