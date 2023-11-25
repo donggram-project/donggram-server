@@ -172,6 +172,7 @@ public class MemberService {
                         .clubName(club.getClubName())
                         .college(club.getCollege().getName())
                         .division(club.getDivision().getName())
+                        .clubImage(club.getImageClub().getUrl())
                         .isRecruitment(club.isRecruitment())
                         .build());
             }
