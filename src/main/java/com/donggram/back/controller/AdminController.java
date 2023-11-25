@@ -89,7 +89,7 @@ public class AdminController {
     }
 
     @PutMapping("/clubs/{id}")
-    public ResponseEntity updateSelecetedClub(@PathVariable("id") Long clubId, @RequestPart("ClubProfileUpdateDto") ClubProfileUpdateDto clubProfileUpdateDto){
+    public ResponseEntity updateSelecetedClub(@PathVariable("id") Long clubId, @RequestBody ClubProfileUpdateDto clubProfileUpdateDto){
 
         ResponseDto responseDto = adminService.updateClubDetails(clubId, clubProfileUpdateDto);
 
