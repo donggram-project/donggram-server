@@ -44,18 +44,18 @@ public class Club {
     @Column(name = "CLUB_RECRUITMENT_PERIOD")
     private String recruitment_period;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "imageClub_id")
     private ImageClub imageClub;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "clubRequest_id")
     private ClubRequest clubRequest;
 
 
     //일대다, 양방향
     @JsonIgnore
-    @OneToMany(mappedBy = "club")
+    @OneToMany(mappedBy = "club", orphanRemoval = true)
     private List<ClubJoin> clubJoinList = new ArrayList<>();
 
     // 다대일, 단방향

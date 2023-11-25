@@ -328,6 +328,18 @@ public class AdminService {
         }
     }
 
+    @Transactional
+    public ResponseDto deleteSelectedClub(Long clubRequestId) {
+        ClubRequest clubRequest = clubRequestRepository.findById(clubRequestId).orElseThrow(() -> new RuntimeException("해당 동아리요청 엔티티가 존재하지 않습니다."));
+
+        clubRepository.delete(clubRequest.getClub());
+        return ResponseDto.builder()
+                .status(200)
+                .responseMessage("삭제된 동아리 ID")
+                .data(clubRequestId)
+                .build();
+    }
+
 
 }
 

@@ -96,6 +96,12 @@ public class AdminController {
         return ResponseEntity.ok(responseDto);
     }
 
+    @DeleteMapping("/clubs/{id}")
+    public ResponseEntity deleteSelectedClub(@PathVariable("id") Long clubId){
+        ResponseDto responseDto = adminService.deleteSelectedClub(clubId);
+        return ResponseEntity.ok(responseDto);
+    }
+
 
 
 }
