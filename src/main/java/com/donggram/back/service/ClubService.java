@@ -148,7 +148,14 @@ public class ClubService {
     }
 
     @Transactional
-    public ResponseDto approveMember(Long memberId, Long clubId){
+    public ResponseDto approveMember(Long memberId, Long clubRequestId){
+
+
+        ClubRequest clubRequest = clubRequestRepository.findById(clubRequestId)
+                .orElseThrow(() -> new RuntimeException("해당 동아리 요청 엔티티가 존재하지 않습니다."));
+
+        long clubId = clubRequest.getClub().getId();
+
         ClubJoin clubJoin = clubJoinRepository.findByMemberIdAndClubId(memberId, clubId)
                 .orElseThrow(() -> new RuntimeException("해당 멤버의 동아리 가입신청이 존재하지 않습니다."));
 
@@ -162,7 +169,14 @@ public class ClubService {
     }
 
     @Transactional
-    public ResponseDto memberReject(Long memberId, Long clubId){
+    public ResponseDto memberReject(Long memberId, Long clubRequestId){
+
+
+        ClubRequest clubRequest = clubRequestRepository.findById(clubRequestId)
+                .orElseThrow(() -> new RuntimeException("해당 동아리 요청 엔티티가 존재하지 않습니다."));
+
+        long clubId = clubRequest.getClub().getId();
+
         ClubJoin clubJoin = clubJoinRepository.findByMemberIdAndClubId(memberId, clubId)
                 .orElseThrow(() -> new RuntimeException("해당 멤버의 동아리 가입신청이 존재하지 않습니다."));
 

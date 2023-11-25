@@ -47,6 +47,9 @@ public class ClubRequest {
     @Enumerated(EnumType.STRING)
     private RequestStatus status;
 
+    @OneToOne(mappedBy = "clubRequest", fetch = FetchType.LAZY)
+    private Club club;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;

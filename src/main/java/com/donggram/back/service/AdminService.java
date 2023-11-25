@@ -175,9 +175,9 @@ public class AdminService {
     }
 
     @Transactional
-    public ResponseDto approve(Long clubId) {
+    public ResponseDto approve(Long clubRequestId) {
 
-        ClubRequest clubRequest = clubRequestRepository.findById(clubId)
+        ClubRequest clubRequest = clubRequestRepository.findById(clubRequestId)
                 .orElseThrow(() -> new RuntimeException("해당 동아리 생성 요청이 존재하지 않습니다."));
 
         // 동아리 상태 변경
@@ -198,6 +198,7 @@ public class AdminService {
                 .clubJoinList(new ArrayList<>())
                 .isRecruitment(clubRequest.isRecruitment())
                 .clubCreated(clubRequest.getClub_created())
+                .clubRequest(clubRequest)
                 .build();
 
         club.setImageClub(clubRequest.getImageClub());
@@ -221,8 +222,8 @@ public class AdminService {
     }
 
     @Transactional
-    public ResponseDto reject(Long clubId){
-        ClubRequest clubRequest = clubRequestRepository.findById(clubId)
+    public ResponseDto reject(Long clubRequestId){
+        ClubRequest clubRequest = clubRequestRepository.findById(clubRequestId)
                 .orElseThrow(() -> new RuntimeException("해당 동아리 생성 요청이 존재하지 않습니다."));
 
         clubRequest.updateStatus(RequestStatus.rejected);
@@ -234,8 +235,16 @@ public class AdminService {
     }
 
     @Transactional
-    public ResponseDto getAllMemberBySelectedClub(Long clubId){
+    public ResponseDto getAllMemberBySelectedClub(Long clubRequestId){
         List<ClubMemberDto> clubMemberDtos = new ArrayList<>();
+
+        //받아오는게 ClubRequestId
+
+        ClubRequest clubRequest = clubRequestRepository.findById(clubRequestId).orElseThrow(() -> new RuntimeException("해당 동아리요청 엔티티가 존재하지 않습니다."));
+
+        //보내줘야 되는게 clubId
+
+        long clubId = clubRequest.getClub().getId();
 
         Club club = clubRepository.findById(clubId).orElseThrow(() -> new RuntimeException("해당 동아리가 존재하지 않습니다."));
         for ( ClubJoin clubJoin : club.getClubJoinList()) {
@@ -256,6 +265,9 @@ public class AdminService {
                 .responseMessage("동아리 멤버 목록 API")
                 .build();
     }
+
+//    @Transactional
+//    public ResponseDto updateClubDetails(Long clubId){}
 
 }
 
