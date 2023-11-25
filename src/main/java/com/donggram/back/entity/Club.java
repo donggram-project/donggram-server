@@ -1,5 +1,8 @@
 package com.donggram.back.entity;
 
+import com.donggram.back.dto.ClubDetailsDto;
+import com.donggram.back.dto.ClubProfileUpdateDto;
+import com.donggram.back.dto.ProfileUpdateDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,6 +13,7 @@ import javax.annotation.processing.Generated;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Entity
@@ -38,6 +42,10 @@ public class Club {
     @Column(name = "CLUB_RECRUITMENT_PERIOD")
     private String recruitment_period;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "imageClub_id")
+    private ImageClub imageClub;
+
     //일대다, 양방향
     @JsonIgnore
     @OneToMany(mappedBy = "club")
@@ -56,4 +64,21 @@ public class Club {
         this.clubJoinList.add(clubJoin);
     }
 
+    public void setImageClub(ImageClub imageClub) {
+        this.imageClub = imageClub;
+    }
+
+    public void updateClubProfile(ClubProfileUpdateDto clubProfileUpdateDto) {
+        this.clubName = clubProfileUpdateDto.getClubName();
+//        this.college = clubProfileUpdateDto.getCollege();
+//        this.division = clubProfileUpdateDto.getDivision();
+//
+//
+//
+//        // 역할 정보를 업데이트
+//        if (profileUpdateDto.getRole() != null) {
+//            this.roles.clear(); // 기존 역할 정보 모두 삭제
+//            this.roles.addAll(Collections.singleton(profileUpdateDto.getRole())); // 새로운 역할 정보 추가
+//        }
+    }
 }

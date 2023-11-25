@@ -139,6 +139,7 @@ public class AdminService {
     @Transactional
     public ResponseDto getClubDetails(Long clubId){
         Optional<ClubRequest> clubRequestOptional = clubRequestRepository.findById(clubId);
+        System.out.println(clubId);
 
         if (clubRequestOptional.isPresent()) {
             // 동아리 가져옴
@@ -152,6 +153,7 @@ public class AdminService {
                     .content(clubRequest.getContent())
                     .college(clubRequest.getCollege())
                     .division(clubRequest.getDivision())
+                    .ClubImage(clubRequest.getImageClub().getUrl())
                     .isRecruitment(clubRequest.isRecruitment())
                     .writer(clubRequest.getMember().getName())
                     .recruitmentPeriod(clubRequest.getRecruitment_period())
@@ -197,6 +199,8 @@ public class AdminService {
                 .isRecruitment(clubRequest.isRecruitment())
                 .clubCreated(clubRequest.getClub_created())
                 .build();
+
+        club.setImageClub(clubRequest.getImageClub());
 
         clubRepository.save(club);
 
