@@ -276,7 +276,7 @@ public class ClubService {
                 imageClub.uploadBasicImage();
             }else {
 
-                String s = uploadImage(multipartFile, clubRequest);
+                String s = uploadImage(multipartFile);
                 imageClub.uploadCustomImage(s);
             }
 
@@ -322,13 +322,13 @@ public class ClubService {
         return formattedDate;
     }
 
-    public String uploadImage(MultipartFile file, ClubRequest clubRequest) {
+    public String uploadImage(MultipartFile file) {
 
 
         try {
 
             String code = UUID.randomUUID().toString();
-            String imageFileName = "club_" + clubRequest.getId() + "_" + code;
+            String imageFileName = "club_" + "_" + code;
 
             ObjectMetadata metadata = new ObjectMetadata();
             metadata.setContentType(file.getContentType());
