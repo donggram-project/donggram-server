@@ -52,6 +52,7 @@ public class ClubService {
                     .college(club.getCollege().getName())
                     .division(club.getDivision().getName())
                     .isRecruitment(club.isRecruitment())
+                    .clubImage(club.getImageClub().getUrl())
                     .build());
         }
 
