@@ -24,6 +24,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -321,8 +322,12 @@ public class ClubService {
     }
 
     public String uploadImage(MultipartFile file, ClubRequest clubRequest) {
+
+
         try {
-            String imageFileName = "club_" + clubRequest.getId() + "_" + file.getOriginalFilename();
+
+            String code = UUID.randomUUID().toString();
+            String imageFileName = "club_" + clubRequest.getId() + "_" + code;
 
             ObjectMetadata metadata = new ObjectMetadata();
             metadata.setContentType(file.getContentType());
