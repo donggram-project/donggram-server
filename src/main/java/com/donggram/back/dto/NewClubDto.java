@@ -14,7 +14,6 @@ public class NewClubDto {
     private String clubName;
     private String content;
     private String recruitment_period;
-    private String clubUrl;
     private boolean isRecruitment;
 
 }

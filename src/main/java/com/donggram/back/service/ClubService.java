@@ -264,8 +264,8 @@ public class ClubService {
                     .clubName(newClubDto.getClubName())
                     .content(newClubDto.getContent())
                     .club_created(LocalDateTimeToString())
-                    .isRecruitment(newClubDto.isRecruitment())
-                    .recruitment_period(newClubDto.getRecruitment_period())
+                    .isRecruitment(true)
+                    .recruitment_period("2023.11.01 ~ 2023.11.29")
                     .status(RequestStatus.pending)
                     .member(member)
                     .build();
