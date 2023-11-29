@@ -195,7 +195,6 @@ public class MemberService {
                 member.updateImageProfile(imageProfile);
             }
         } else if (multipartFile.isEmpty()){
-            System.out.println("asdfagadhadgadfaewkgfjdjvadjfioasdhfalis");
             ImageProfile imageProfile = new ImageProfile();
             imageProfile.uploadBasicImage();
             member.updateImageProfile(imageProfile);
@@ -210,7 +209,11 @@ public class MemberService {
 
     private ImageProfile uploadImage(MultipartFile file, Member member) {
         try {
-            String imageFileName = "member_" + member.getId() + "_" + file.getOriginalFilename();
+
+
+            String code = UUID.randomUUID().toString();
+
+            String imageFileName = "member_" + member.getId() + "_" + code;
 
             ObjectMetadata metadata = new ObjectMetadata();
             metadata.setContentType(file.getContentType());

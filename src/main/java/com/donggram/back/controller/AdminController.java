@@ -51,7 +51,7 @@ public class AdminController {
         return ResponseEntity.ok(allClubs);
     }
 
-    @GetMapping("/clubs/{id}")
+    @GetMapping("/clubs/info/{id}")
     public ResponseEntity getSelectedClub(@PathVariable("id") Long clubId){
         ResponseDto clubDetails = adminService.getClubDetails(clubId);
         return ResponseEntity.ok(clubDetails);
